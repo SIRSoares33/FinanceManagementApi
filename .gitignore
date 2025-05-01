@@ -452,3 +452,6 @@ wwwroot/dist/
 
 ## JetBrains Rider
 .idea/
+FinanceManagementApi/FinanceManagementApi.sln
+FinanceManagementApi/appsettings.json
+FinanceManagementApi/Properties
