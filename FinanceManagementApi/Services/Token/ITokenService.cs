@@ -8,7 +8,7 @@ namespace FinanceManagementApi.Services.Token
     public interface ITokenService
     {
         /// <summary>
-        /// Gera um token para authenticação
+        /// Gera um token para authenticação com as claims do usuário.
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>

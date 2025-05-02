@@ -1,12 +1,14 @@
-using FinanceManagementApi.Models.Login;
 using FinanceManagementApi.Models.User;
 
 namespace FinanceManagementApi.Repository.User
 {
+    /// <summary>
+    /// Interface responsável pela camada de gerenciamento de dados.
+    /// </summary>
     public interface IUserRepository
     {
         /// <summary>
-        /// Realiza o login do usuário.
+        /// Pega um usuário pelo email no banco de dados.
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
@@ -18,7 +20,7 @@ namespace FinanceManagementApi.Repository.User
         /// <returns></returns>
         Task AddUserAsync(UserModel model);
         /// <summary>
-        /// Deleta um usuário com base no id.
+        /// Deleta um usuário.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -29,6 +31,11 @@ namespace FinanceManagementApi.Repository.User
         /// <param name="email"></param>
         /// <returns></returns>
         Task<bool> VerifyEmailExistsInDb(string email);
+        /// <summary>
+        /// Pega um usuário pelo Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Task<UserModel?> GetUserById(int id);
     }
 }
