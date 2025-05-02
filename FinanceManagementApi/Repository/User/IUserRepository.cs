@@ -8,14 +8,27 @@ namespace FinanceManagementApi.Repository.User
         /// <summary>
         /// Realiza o login do usuário.
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="email"></param>
         /// <returns></returns>
-        Task<UserModel?> Login(LoginModel model);
+        Task<UserModel?> GetUserByEmail(string email);
         /// <summary>
         /// Realiza o cadastro do usuário.
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task RegisterAsync(UserModel model);
+        Task AddUserAsync(UserModel model);
+        /// <summary>
+        /// Deleta um usuário com base no id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task DeleteUserAsync(UserModel userToDelete);
+        /// <summary>
+        /// Verifica se um email já existe no banco de dados.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        Task<bool> VerifyEmailExistsInDb(string email);
+        Task<UserModel?> GetUserById(int id);
     }
 }
