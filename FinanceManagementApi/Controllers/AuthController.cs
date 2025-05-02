@@ -1,7 +1,7 @@
 using FinanceManagementApi.Models.Login;
+using FinanceManagementApi.Models.User;
 using FinanceManagementApi.Repository.User;
 using FinanceManagementApi.Services.Token;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinanceManagementApi.Controllers
@@ -18,8 +18,18 @@ namespace FinanceManagementApi.Controllers
             return user is null ? Unauthorized("Usuário não encontrado.")
             : Ok(tokenService.GenerateToken(user));
         }
-        [Authorize]
-        [HttpGet("Get")]
-        public IActionResult GetAction() => Ok();
+        [HttpPost("Register")]
+        public async Task<IActionResult> RegisterAsync([FromBody] UserModel model)
+        {
+            try
+            {
+                await repository.RegisterAsync(model);
+                return Created();
+            }
+            catch(Exception ex)
+            {
+                return UnprocessableEntity(ex.Message);
+            }
+        }   
     }
 }
