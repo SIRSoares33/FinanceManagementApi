@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace FinanceManagementApi.Models.User
+namespace FinanceManagementApi.Models.User 
 {
     [Table("Users")]
-    public class UserModel
+    [Index(nameof(Email), IsUnique = true)]
+    public class UserModel : IUserEmailAndPassword
     {
         [Key]
         public int Id { get; set; }
