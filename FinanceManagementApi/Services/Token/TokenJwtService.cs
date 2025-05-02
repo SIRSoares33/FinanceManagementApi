@@ -6,14 +6,14 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FinanceManagementApi.Services.Token
 {
-    public class TokenService : ITokenService
+    public class TokenJwtService : ITokenService
     {
         public string GenerateToken(UserModel user)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.Name),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Name),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JwtSecretKey")!));
@@ -21,7 +21,7 @@ namespace FinanceManagementApi.Services.Token
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(1),
+                expires: DateTime.UtcNow.AddHours(5),
                 signingCredentials: credentials
             );
 
