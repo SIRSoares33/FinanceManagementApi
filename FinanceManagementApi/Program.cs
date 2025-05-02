@@ -1,9 +1,13 @@
 using System.Text;
 using FinanceManagementApi.Context;
+using FinanceManagementApi.Models.User;
 using FinanceManagementApi.Repository;
 using FinanceManagementApi.Repository.User;
+using FinanceManagementApi.Services.Auth;
+using FinanceManagementApi.Services.Login;
 using FinanceManagementApi.Services.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -68,7 +72,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 // TokenService
-builder.Services.AddSingleton<ITokenService, TokenService>();
+builder.Services.AddSingleton<ITokenService, TokenJwtService>();
+//AuthService
+builder.Services.AddScoped<IAuthService, AuthService>();
+// PasswordHasher
+builder.Services.AddSingleton<IPasswordHasher<IUserEmailAndPassword>, PasswordHasher<IUserEmailAndPassword>>();
 #endregion
 
 var app = builder.Build();
