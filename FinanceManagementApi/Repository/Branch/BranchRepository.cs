@@ -6,6 +6,8 @@ namespace FinanceManagementApi.Repository.Branch
 {
     public class BranchRepository(IContext context) : IBranchRepository
     {
+        #region Methods
+        // IBranchRepository
         public async Task CreateBranchAsync(BranchModel branchModel)
         {
             await context.Branches.AddAsync(branchModel);
@@ -45,5 +47,6 @@ namespace FinanceManagementApi.Repository.Branch
 
             return user.Branches.ToList();
         }
+        #endregion
     }
 }
