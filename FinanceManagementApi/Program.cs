@@ -2,6 +2,7 @@ using System.Text;
 using FinanceManagementApi.Context;
 using FinanceManagementApi.Models.User;
 using FinanceManagementApi.Repository;
+using FinanceManagementApi.Repository.Branch;
 using FinanceManagementApi.Repository.User;
 using FinanceManagementApi.Services.Auth;
 using FinanceManagementApi.Services.Login;
@@ -71,6 +72,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 #region DI
 // Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 // TokenService
 builder.Services.AddSingleton<ITokenService, TokenJwtService>();
 //AuthService
