@@ -43,6 +43,7 @@ namespace FinanceManagementApi.Repository.Branch
         {
             var user = await context.Users
                 .Include(x => x.Branches)
+                .ThenInclude(x => x.Transactions)
                 .FirstOrDefaultAsync(x => x.Id == userId) ?? throw new Exception("Usuário não encontrado.");
 
             return user.Branches.ToList();

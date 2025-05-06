@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using FinanceManagementApi.Models.Transaction;
 using FinanceManagementApi.Models.User;
 
 namespace FinanceManagementApi.Models.Branch
@@ -22,5 +23,7 @@ namespace FinanceManagementApi.Models.Branch
 
         [JsonIgnore]
         public UserModel? User { get; set; }
+
+        public ICollection<TransactionModel>? Transactions { get; set; } = [];
     }
 }
