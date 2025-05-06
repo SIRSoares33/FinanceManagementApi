@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using FinanceManagementApi.Models.Branch;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManagementApi.Models.User 
@@ -20,5 +22,8 @@ namespace FinanceManagementApi.Models.User
 
         [Required(ErrorMessage="Senha é obrigatória.")]
         public string Password { get; set; } = string.Empty;
+
+        [JsonIgnore]
+        public ICollection<BranchModel> Branches { get; set; } = [];
     }
 }
