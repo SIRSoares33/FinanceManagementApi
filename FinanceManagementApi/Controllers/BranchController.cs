@@ -33,7 +33,7 @@ namespace FinanceManagementApi.Controllers
             await repository.CreateBranchAsync(branchModel);
             return Created();
         }
-        [HttpPatch("UpdateBranch/{branchId}")]
+        [HttpPut("UpdateBranch/{branchId}")]
         public async Task<IActionResult> UpdateBranch(int branchId, [FromBody] BranchModel branchModel)
         {
             try
