@@ -9,7 +9,6 @@ namespace FinanceManagementApi.Models.Transaction
         [Key]
         public int Id { get; set; }
 
-
         [Required(ErrorMessage = "Nome é obrigatório required")]
         [StringLength(20, ErrorMessage = "Nome deve ter no máximo 20 caracteres")]
         public string Name { get; set; } = string.Empty;
@@ -29,6 +28,8 @@ namespace FinanceManagementApi.Models.Transaction
 
         public string TransactionDate { get; set; } = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
 
+        [Required(ErrorMessage = "Id da branch é obrigatória")]
+        [Range(1, int.MaxValue, ErrorMessage = "Id da branch deve ser maior que zero")]
         public int BranchId { get; set; }
 
         [JsonIgnore]

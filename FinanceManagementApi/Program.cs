@@ -18,9 +18,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-#region Port Configuration
-#endregion
-
 #region Swagger
 builder.Services.AddSwaggerGen();
 #endregion
@@ -74,6 +71,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+builder.Services.AddScoped<IBranchExists, BranchRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 // TokenService
 builder.Services.AddSingleton<ITokenService, TokenJwtService>();

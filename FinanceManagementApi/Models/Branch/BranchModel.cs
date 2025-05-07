@@ -17,7 +17,7 @@ namespace FinanceManagementApi.Models.Branch
         [StringLength(100, ErrorMessage="Descrição deve ter no máximo 100 caracteres.")]
         public string Description { get; set; } = "Sem descrição.";
         
-        public string CreatedAt { get; set; } = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss");
+        public string CreatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
         public int UserId { get; set; }
 

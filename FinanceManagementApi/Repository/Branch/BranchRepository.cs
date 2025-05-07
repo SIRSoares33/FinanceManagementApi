@@ -48,6 +48,13 @@ namespace FinanceManagementApi.Repository.Branch
 
             return user.Branches.ToList();
         }
+        // IBranchExists
+        public async Task BranchExistsAsync(int branchId) 
+        {
+            bool exists = await context.Branches.AnyAsync(x => x.Id == branchId);
+            
+            if (!exists) throw new Exception("Branch não encontrada.");
+        }
         #endregion
     }
 }
