@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using FinanceManagementApi.Models.Transaction;
 using FinanceManagementApi.Models.User;
 
 namespace FinanceManagementApi.Models.Branch
@@ -16,11 +17,13 @@ namespace FinanceManagementApi.Models.Branch
         [StringLength(100, ErrorMessage="Descrição deve ter no máximo 100 caracteres.")]
         public string Description { get; set; } = "Sem descrição.";
         
-        public string CreatedAt { get; set; } = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss");
+        public string CreatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
         public int UserId { get; set; }
 
         [JsonIgnore]
         public UserModel? User { get; set; }
+
+        public ICollection<TransactionModel>? Transactions { get; set; } = [];
     }
 }

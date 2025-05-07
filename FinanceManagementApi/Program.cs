@@ -3,6 +3,7 @@ using FinanceManagementApi.Context;
 using FinanceManagementApi.Models.User;
 using FinanceManagementApi.Repository;
 using FinanceManagementApi.Repository.Branch;
+using FinanceManagementApi.Repository.Transaction;
 using FinanceManagementApi.Repository.User;
 using FinanceManagementApi.Services.Auth;
 using FinanceManagementApi.Services.Login;
@@ -16,9 +17,6 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-
-#region Port Configuration
-#endregion
 
 #region Swagger
 builder.Services.AddSwaggerGen();
@@ -73,6 +71,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+builder.Services.AddScoped<IBranchExists, BranchRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 // TokenService
 builder.Services.AddSingleton<ITokenService, TokenJwtService>();
 //AuthService

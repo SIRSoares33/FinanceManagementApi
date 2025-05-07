@@ -5,7 +5,7 @@ namespace FinanceManagementApi.Repository.Branch
     /// <summary>
     /// Interface para gerenciar operações relacionadas a Branches no repositório.
     /// </summary>
-    public interface IBranchRepository
+    public interface IBranchRepository : IBranchExists
     {
         /// <summary>
         /// Cria uma nova branch no repositório.
