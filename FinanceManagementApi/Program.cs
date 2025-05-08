@@ -84,6 +84,8 @@ builder.Services.AddSingleton<IPasswordHasher<IUserEmailAndPassword>, PasswordHa
 var app = builder.Build();
 
 #region Middlewares
+    // CORS
+    app.UseCors("AllowAllOrigins");
     // Controllers
     app.MapControllers();
     // Auth

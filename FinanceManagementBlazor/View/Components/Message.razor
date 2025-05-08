@@ -1,0 +1,28 @@
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+@using FinanceManagementBlazor.Entities.Enums
+
+<div class=@messageTypeToStringMap[messageType] role="alert">
+<strong>@caption:</strong> @context
+</div>
+
+@code
+{
+    /// <summary>
+    /// Dictionary to define the type of message to be displayed.
+    /// The key is the enum value and the value is the corresponding CSS class for the alert.
+    /// </summary>
+    private Dictionary<EMessageType, string> messageTypeToStringMap = new()
+    {
+        { EMessageType.Success, "alert alert-success alert-dismissible fade show" },
+        { EMessageType.Error, "alert alert-danger alert-dismissible fade show" },
+        { EMessageType.Warning, "alert alert-warning alert-dismissible fade show" },
+        { EMessageType.Info, "alert alert-info alert-dismissible fade show" },
+        { EMessageType.Light, "alert alert-light alert-dismissible fade show" },
+        { EMessageType.Dark, "alert alert-dark alert-dismissible fade show" },
+    };
+    
+    [Parameter] public string? context { get; set; }
+    [Parameter] public string? caption { get; set; }
+    [Parameter] public EMessageType messageType { get; set; }
+} 

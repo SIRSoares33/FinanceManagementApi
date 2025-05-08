@@ -1,0 +1,40 @@
+/* Card de login */
+.login-card {
+    max-width: 400px;
+    width: 100%;
+    border-radius: 15px;
+    background-color: #ffffffee;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+/* Título do login */
+.login-title {
+    color: #6a11cb;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+/* Botão de login */
+.login-button {
+    background: #6a11cb;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+/* Botão de registro */
+.register-button {
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #28a745;
+    color: #28a745;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.register-button:hover {
+    background-color: #28a745;
+    color: #fff;
+}

@@ -1,5 +1,16 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using FinanceManagementBlazor.View.Components
+
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    <RedirectToLogin/>
+                </NotAuthorized>
+                <Authorizing>
+                    <p>Verificando autenticação...</p>
+                </Authorizing>
+            </AuthorizeRouteView>
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>

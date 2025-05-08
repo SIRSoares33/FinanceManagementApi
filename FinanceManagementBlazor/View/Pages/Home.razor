@@ -1,0 +1,35 @@
+@page "/Home"
+@using FinanceManagementBlazor.Services.Auth
+@using FinanceManagementBlazor.Storage.Token
+@using Microsoft.AspNetCore.Authorization
+
+@inject AuthProvider auth
+@inject IUserLoggedStorage userStorage
+@inject NavigationManager Navigation
+
+
+@attribute [Authorize]
+
+
+<h1>Olá! @userName Id: @userId</h1>
+<p>Bem-vindo ao sistema de gerenciamento financeiro.</p>
+<p>Você está logado.</p>
+
+<button @onclick="Logout">LogOut</button>
+
+@code
+{
+    private string userName = string.Empty;
+    private string userId = string.Empty;
+
+    protected async override Task OnInitializedAsync()
+    {
+        var loggedUser = await userStorage.GetItemAsync();
+
+        userName = loggedUser?.Name ?? string.Empty;
+        userId = loggedUser?.Id.ToString() ?? string.Empty;
+    }
+
+    private async Task Logout() 
+        => await auth.UserLoggedOut();
+} 
