@@ -1,0 +1,85 @@
+﻿@page "/"
+@layout FinanceManagementBlazor.View.Layout.NoMenuLayout
+
+@using FinanceManagementBlazor.Entities
+@using FinanceManagementBlazor.Entities.Enums
+@using FinanceManagementBlazor.Services.Auth
+@using FinanceManagementBlazor.Storage.Token
+@using FinanceManagementBlazor.View.Components
+
+@inject IUserLoggedStorage userStorage
+
+@inject NavigationManager Navigation
+@inject IAuthService authService
+@inject AuthModel authModel
+
+
+<link rel="stylesheet" href="/css/login.css"/>
+
+<div class="d-flex justify-content-center align-items-center vh-100 login-container">
+    <div class="card login-card">
+        <h3 class="text-center login-title">Login Financeiro</h3>
+
+        @if (!string.IsNullOrEmpty(messageErro))
+        {
+            <Message context="@messageErro" caption="Erro" messageType="@EMessageType.Error"/>
+        }
+        
+        <Entry type="email" label="Email" placeholder="Digite seu email." @bind-Value="authModel.Email"></Entry>
+        <Entry type="password" label="Senha" placeholder="Digite sua senha." @bind-Value="authModel.Password"></Entry>
+
+        <div class="d-grid gap-3 mt-4">
+            <button type="button" class="btn btn-primary btn-lg fw-bold rounded-pill shadow-sm login-button" @onclick="OnLogin" disabled="@isLoading">
+                @if (isLoading)
+                {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"/>
+                }
+                Entrar
+            </button>
+
+            <button type="button" class="btn btn-outline-success fw-bold rounded-pill shadow-sm register-button" @onclick="OnRegister">
+                Registrar-se
+            </button>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    #region System Properties
+    string messageErro = string.Empty;
+    bool isLoading = false;
+    #endregion
+
+    #region Handlers
+    protected override async Task OnInitializedAsync()
+    {
+        if (await userStorage.ItemExistsAsync()) Navigation.NavigateTo("/Home");
+    }
+    
+    public async Task OnLogin()
+    {
+        isLoading = true;
+
+        try
+        {
+            await authService.Login(authModel);
+            Navigation.NavigateTo("/Home");
+        }
+        catch(HttpRequestException)
+        {
+            messageErro = "Erro ao conectar com o servidor! Verifique sua conexão com a internet.";
+        }
+        catch(Exception ex) 
+        {
+            messageErro = ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+    public void OnRegister() 
+        => Navigation.NavigateTo("/Register");
+    #endregion
+}

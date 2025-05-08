@@ -1,0 +1,57 @@
+<div class="form-group mb-4 entry-container">
+    <label for="@Id" class="entry-label">
+        @Label
+    </label>
+    <input id="@Id" type="@Type" class="form-control shadow-sm entry-input" placeholder="@Placeholder" 
+        value="@Value" @oninput="OnInputChanged" />
+</div>
+
+<style>
+    /* Container do campo de entrada */
+.entry-container {
+    position: relative;
+}
+
+/* Estilo do label */
+.entry-label {
+    font-weight: bold;
+    font-size: 0.9rem;
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    background: #ffffff;
+    padding: 0 5px;
+    border-radius: 5px;
+    color: #000; 
+}
+
+/* Estilo do campo de entrada */
+.entry-input {
+    border: 2px solid  #6a11cb; 
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.entry-input:focus {
+    border-color: #2569fc;
+    outline: none;
+}
+</style>
+
+@code {
+    [Parameter] public string Type { get; set; } = "text";
+    [Parameter] public string Label { get; set; } = string.Empty;
+    [Parameter] public string Placeholder { get; set; } = string.Empty;
+    [Parameter] public string Value { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+
+    private string Id => Guid.NewGuid().ToString();
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        Value = e.Value?.ToString() ?? string.Empty;
+        await ValueChanged.InvokeAsync(Value);
+    }
+}
