@@ -1,35 +1,88 @@
 @page "/Home"
-@using FinanceManagementBlazor.Services.Auth
+@using FinanceManagementBlazor.Entities
+@using FinanceManagementBlazor.Services.HttpRequests.Branch
 @using FinanceManagementBlazor.Storage.Token
 @using Microsoft.AspNetCore.Authorization
 
-@inject AuthProvider auth
 @inject IUserLoggedStorage userStorage
-@inject NavigationManager Navigation
-
+@inject IBranchHttpService branchHttpService
+@inject NavigationManager Navigate
+@inject AuthProvider authProvider
 
 @attribute [Authorize]
 
+<link rel="stylesheet" href="/css/home.css"/>
 
-<h1>Olá! @userName Id: @userId</h1>
-<p>Bem-vindo ao sistema de gerenciamento financeiro.</p>
-<p>Você está logado.</p>
+<div class="home-container">
+    <h1>Olá, @userName 👋</h1>
 
-<button @onclick="Logout">LogOut</button>
+    <button @onclick="authProvider.UserLoggedOut">Logout</button>
+
+    <div class="resumo">
+        <div class="resumo-card receita">
+            <i class="fas fa-arrow-up"></i>
+            <div>
+                <h3>Receita</h3>
+                <p>R$ 15.000,00</p>
+            </div>
+        </div>
+        <div class="resumo-card despesa">
+            <i class="fas fa-arrow-down"></i>
+            <div>
+                <h3>Despesa</h3>
+                <p>R$ 5.300,00</p>
+            </div>
+        </div>
+        <div class="resumo-card saldo">
+            <i class="fas fa-wallet"></i>
+            <div>
+                <h3>Saldo</h3>
+                <p>R$ 9.700,00</p>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="margin-top: 2rem;">Suas Branchs</h2>
+
+    @if (branchs.Count == 0)
+    {
+        <h3>Você não possui branchs cadastradas</h3>
+    }
+    else
+    {
+        <div class="branchs-container">
+            @foreach (var branch in branchs)
+            {
+                <div class="branch-card">
+                    <div>
+                        <h3>@branch.Name</h3>
+                        <p>Saldo: R$ @branch.Transactions?.Sum(x => x.Amount)</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
 
 @code
 {
-    private string userName = string.Empty;
-    private string userId = string.Empty;
+    #region System Properties
+    public string userName = string.Empty;
+    public string entry = string.Empty;
+    public string expense = string.Empty;
 
-    protected async override Task OnInitializedAsync()
+    public List<BranchModel> branchs = new();
+    #endregion
+
+    #region Handlers
+    protected override async Task OnInitializedAsync()
     {
-        var loggedUser = await userStorage.GetItemAsync();
+        if (await userStorage.ItemExistsAsync() is false) return;
 
-        userName = loggedUser?.Name ?? string.Empty;
-        userId = loggedUser?.Id.ToString() ?? string.Empty;
+        userName = (await userStorage.GetItemAsync())?.Name ?? string.Empty;
+
+        branchs = await branchHttpService.GetAllBranchs();   
     }
-
-    private async Task Logout() 
-        => await auth.UserLoggedOut();
-} 
+    #endregion
+}

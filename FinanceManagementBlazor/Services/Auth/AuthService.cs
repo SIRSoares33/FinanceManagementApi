@@ -11,7 +11,7 @@ namespace FinanceManagementBlazor.Services.Auth.Login
         {
             var token = await loginHttpService.LoginHttpRequest(authModel);
 
-            await authProvider.UserLoggedIn(jwtParser.GetLoggedUserModel(token));
+            await authProvider.UserLoggedIn(jwtParser.GetLoggedUserModel(token), token);
         }
         
         public async Task Register(AuthModel authModel) 
