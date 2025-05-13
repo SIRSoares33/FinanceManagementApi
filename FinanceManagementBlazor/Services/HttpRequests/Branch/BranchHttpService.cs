@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using System.Text.Json;
 using FinanceManagementBlazor.Entities;
 using FinanceManagementBlazor.Entities.Endpoints.BranchEndpoints;
@@ -20,6 +21,18 @@ namespace FinanceManagementBlazor.Services.HttpRequests.Branch
 
             return JsonSerializer.Deserialize<List<BranchModel>>(content) 
                 ?? throw new Exception("Não foi possível desserializar a resposta do servidor.");
+        }
+        public async Task DeleteBranchAsync(string id)
+        {
+            var response = await _http.DeleteAsync(endpoint.Delete + id);
+
+            if (response.IsSuccessStatusCode is false) throw new Exception(await response.Content.ReadAsStringAsync());
+        }
+        public async Task CreateBranch(BranchModel model)
+        {
+            var response = await _http.PostAsJsonAsync(endpoint.Create, new { model.Name, model.Description });
+
+            if (response.IsSuccessStatusCode is false) throw new Exception(await response.Content.ReadAsStringAsync());
         }
         #endregion
     }

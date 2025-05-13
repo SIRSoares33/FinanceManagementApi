@@ -1,0 +1,80 @@
+﻿@using FinanceManagementBlazor.Entities
+
+@if (Show)
+{
+    <div class="modal-overlay">
+        <div class="modal-box">
+            <h4>Adicionar Campo</h4>
+            <Entry Label="Nome" Placeholder="Nome da branch" @bind-Value="@name" />
+            <Entry Label="Descrição" Placeholder="Descrição da Branch (Opcional)" @bind-Value="@description"/>
+            <div class="modal-actions">
+                <button class="btn salvar" @onclick="() => OnSave.Invoke( new(name, description) )">Salvar</button>
+                <button class="btn cancelar" @onclick="() => { Show = false; } ">Cancelar</button>
+            </div>
+        </div>
+    </div>
+}
+<style>
+    .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    }
+
+    .modal-box {
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 10px;
+    width: 280px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    }
+
+    .input-text {
+    width: 100%;
+    padding: 6px 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    }
+
+    .modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    }
+
+    .btn {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    }
+
+    .btn.salvar {
+    background-color: #4caf50;
+    color: white;
+    }
+
+    .btn.cancelar {
+    background-color: #f44336;
+    color: white;
+    }
+</style>
+
+@code {
+    private string name = string.Empty;
+    private string description = string.Empty;
+
+    [Parameter] public bool Show { get; set; }
+    [Parameter] public required Action<BranchModel> OnSave { get; set; } 
+}

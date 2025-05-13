@@ -8,6 +8,7 @@ using FinanceManagementApi.Repository.User;
 using FinanceManagementApi.Services.Auth;
 using FinanceManagementApi.Services.Login;
 using FinanceManagementApi.Services.Token;
+using FinanceManagementApi.Services.Transaction;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -79,6 +80,8 @@ builder.Services.AddSingleton<ITokenService, TokenJwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 // PasswordHasher
 builder.Services.AddSingleton<IPasswordHasher<IUserEmailAndPassword>, PasswordHasher<IUserEmailAndPassword>>();
+// TransactionService
+builder.Services.AddSingleton<ITransactionService, TransactionService>();
 #endregion
 
 var app = builder.Build();

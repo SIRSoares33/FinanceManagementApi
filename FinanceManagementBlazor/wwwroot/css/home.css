@@ -80,3 +80,29 @@ h1 {
 .branch-card p {
     margin: 0;
 }
+
+.logout-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #f44336, #e53935);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+    .logout-btn i {
+        font-size: 1.1rem;
+    }
+
+    .logout-btn:hover {
+        background: linear-gradient(135deg, #d32f2f, #c62828);
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }

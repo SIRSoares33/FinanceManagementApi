@@ -2,21 +2,18 @@ using System.Text.Json.Serialization;
 
 namespace FinanceManagementBlazor.Entities
 {
-    public class BranchModel
+    public class BranchModel(string name, string description)
     {
-        [JsonPropertyName("	id")]
+        [JsonPropertyName("id")]
         public int Id { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = name;
 
         [JsonPropertyName("description")]
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; } = description;
         
         [JsonPropertyName("createdAt")]
         public string CreatedAt { get; set; } = string.Empty;
-
-        [JsonPropertyName("transactions")]
-        public ICollection<TransactionModel>? Transactions { get; set; } = [];
     }
 }

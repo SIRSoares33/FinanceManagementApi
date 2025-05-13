@@ -1,11 +1,7 @@
 @page "/Home"
-@using FinanceManagementBlazor.Entities
-@using FinanceManagementBlazor.Services.HttpRequests.Branch
-@using FinanceManagementBlazor.Storage.Token
-@using Microsoft.AspNetCore.Authorization
-
-@inject IUserLoggedStorage userStorage
-@inject IBranchHttpService branchHttpService
+@using FinanceManagementBlazor.Services.HttpRequests.Transaction
+@layout FinanceManagementBlazor.View.Layout.NoMenuLayout
+@inject IHomeService service 
 @inject NavigationManager Navigate
 @inject AuthProvider authProvider
 
@@ -13,36 +9,26 @@
 
 <link rel="stylesheet" href="/css/home.css"/>
 
-<div class="home-container">
-    <h1>Olá, @userName 👋</h1>
+<ModalScreen Show="showModal" OnSave=" async (BranchModel branchInfo) => { await SaveBranchAsync(branchInfo); }"/>
 
-    <button @onclick="authProvider.UserLoggedOut">Logout</button>
+<div class="home-container">
+
+    <h1>Olá, @userName 👋</h1> 
+
+    <DangerButton Text="Sair" OnClick="authProvider.UserLoggedOut"/>
 
     <div class="resumo">
-        <div class="resumo-card receita">
-            <i class="fas fa-arrow-up"></i>
-            <div>
-                <h3>Receita</h3>
-                <p>R$ 15.000,00</p>
-            </div>
-        </div>
-        <div class="resumo-card despesa">
-            <i class="fas fa-arrow-down"></i>
-            <div>
-                <h3>Despesa</h3>
-                <p>R$ 5.300,00</p>
-            </div>
-        </div>
-        <div class="resumo-card saldo">
-            <i class="fas fa-wallet"></i>
-            <div>
-                <h3>Saldo</h3>
-                <p>R$ 9.700,00</p>
-            </div>
-        </div>
+        <CardFinance Value=@statistic.Entry.ToString() Type="EFinanceCardType.Revenue" />
+        <CardFinance Value=@statistic.Expense.ToString() Type="EFinanceCardType.Expense" />
+        <CardFinance Value=@statistic.Balance.ToString() Type="EFinanceCardType.Balance" />
     </div>
 
-    <h2 style="margin-top: 2rem;">Suas Branchs</h2>
+    <h2 style="margin-top: 2rem;">Suas Branchs</h2> <button @onclick="() => { showModal = true; }">add</button>
+
+    @if (!string.IsNullOrEmpty(messageErro))
+    {
+        <Message context="@messageErro" caption="Erro" messageType="@EMessageType.Error"/>
+    }
 
     @if (branchs.Count == 0)
     {
@@ -53,36 +39,63 @@
         <div class="branchs-container">
             @foreach (var branch in branchs)
             {
-                <div class="branch-card">
-                    <div>
-                        <h3>@branch.Name</h3>
-                        <p>Saldo: R$ @branch.Transactions?.Sum(x => x.Amount)</p>
-                    </div>
-                </div>
+                <BranchCard Name="@branch.Name" Create="@branch.CreatedAt" Description="@branch.Description"/> 
+                <DangerButton Text="Excluir" OnClick="async () => { await DeleteBranchAsync(branch.Id); }"/>
             }
         </div>
     }
 </div>
 
-
 @code
 {
     #region System Properties
     public string userName = string.Empty;
-    public string entry = string.Empty;
-    public string expense = string.Empty;
+    public string messageErro = string.Empty;
+    public bool showModal;
 
-    public List<BranchModel> branchs = new();
+    public List<BranchModel> branchs = [];
+    public TransactionStatisticModel statistic = new(); 
     #endregion
 
     #region Handlers
     protected override async Task OnInitializedAsync()
     {
-        if (await userStorage.ItemExistsAsync() is false) return;
+        try
+        {
+            (userName, branchs, statistic) = await service.GetUserNameBranchsAndStatisticAsync();
+        }
+        catch
+        {    
+        }
+    }
 
-        userName = (await userStorage.GetItemAsync())?.Name ?? string.Empty;
+    protected async Task DeleteBranchAsync(int id)
+    {
+        try
+        {
+            await service.DeleteBranchAsync(id.ToString());
 
-        branchs = await branchHttpService.GetAllBranchs();   
+            Navigate.NavigateTo(Navigate.Uri, forceLoad: true);
+        }
+        catch(Exception ex)
+        {
+            messageErro = ex.Message;
+        }
+    }
+    protected async Task SaveBranchAsync(BranchModel branchInfo)
+    {
+        try
+        {
+            await service.SaveBranchAsync(branchInfo);
+
+            Navigate.NavigateTo(Navigate.Uri, forceLoad: true);
+        }
+        catch(Exception ex)
+        {
+            messageErro = ex.Message;
+            showModal = false;
+            StateHasChanged();
+        }
     }
     #endregion
 }
