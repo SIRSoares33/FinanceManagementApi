@@ -12,7 +12,7 @@ namespace FinanceManagementBlazor.Services.HttpRequests.Branch
         #endregion
 
         #region Methods
-        public async Task<List<BranchModel>> GetAllBranchs()
+        public async Task<List<BranchModel>> GetAllBranchsAsync()
         {
             var response = await _http.GetAsync(endpoint.GetAll);
             var content  = await response.Content.ReadAsStringAsync();

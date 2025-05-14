@@ -5,7 +5,7 @@ namespace FinanceManagementBlazor.Services.Home
 {
     public interface IHomeService
     {
-        Task<(string, List<BranchModel>, TransactionStatisticModel)> GetUserNameBranchsAndStatisticAsync();
+        Task<HomeDependecies> GetHomeDependencies();
         Task DeleteBranchAsync(string branchId);
         Task SaveBranchAsync(BranchModel branchInfo);
     }
