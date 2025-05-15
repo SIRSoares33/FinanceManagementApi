@@ -1,13 +1,15 @@
 ﻿using FinanceManagementBlazor.Entities;
 using FinanceManagementBlazor.Services.HttpRequests.Branch;
 using FinanceManagementBlazor.Services.HttpRequests.Transaction;
+using FinanceManagementBlazor.Storage.Branch;
 using FinanceManagementBlazor.Storage.Token;
 
 namespace FinanceManagementBlazor.Services.Home
 {
-    public class HomeService(IBranchHttpService branchHttp, IUserLoggedStorage userStorage, ITransactionHttpService transactionHttpService) : IHomeService
+    public class HomeService(IBranchHttpService branchHttp, IUserLoggedStorage userStorage, ITransactionHttpService transactionHttpService
+        ,IBranchStorage branchStorage) : IHomeService
     {
-        public async Task<HomeDependecies> GetHomeDependencies()
+        public async Task<HomeDependecies> GetHomeDependenciesAsync()
             => new() 
             { 
                 UserName  = (await userStorage.GetItemAsync())?.Name ?? throw new Exception("Não foi possível pegar o userName"), 
@@ -20,6 +22,9 @@ namespace FinanceManagementBlazor.Services.Home
 
         public async Task SaveBranchAsync(BranchModel branchInfo)
             => await branchHttp.CreateBranch(branchInfo);
+
+        public async Task SetBranchStorageAsync(BranchModel branch)
+            => await branchStorage.SetItemAsync(branch);
     }
 
     public class HomeDependecies

@@ -1,11 +1,26 @@
 using FinanceManagementBlazor.Entities;
 
-namespace FinanceManagementBlazor.Services.HttpRequests.Branch
+/// <summary>
+/// Define os serviços HTTP relacionados às filiais.
+/// Fornece métodos para obter todas as filiais, criar uma nova filial e excluir uma filial existente.
+/// </summary>
+public interface IBranchHttpService
 {
-    public interface IBranchHttpService
-    {
-        Task<List<BranchModel>> GetAllBranchsAsync();
-        Task DeleteBranchAsync(string id);
-        Task CreateBranch(BranchModel model);
-    }
+    /// <summary>
+    /// Obtém a lista de todas as filiais cadastradas.
+    /// </summary>
+    /// <returns>Uma lista de objetos <see cref="BranchModel"/>.</returns>
+    Task<List<BranchModel>> GetAllBranchsAsync();
+
+    /// <summary>
+    /// Exclui uma filial a partir do identificador informado.
+    /// </summary>
+    /// <param name="id">Identificador da filial a ser excluída.</param>
+    Task DeleteBranchAsync(string id);
+
+    /// <summary>
+    /// Cria uma nova filial com as informações fornecidas.
+    /// </summary>
+    /// <param name="model">Objeto contendo os dados da filial.</param>
+    Task CreateBranch(BranchModel model);
 }

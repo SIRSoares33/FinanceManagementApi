@@ -20,6 +20,7 @@ using FinanceManagementBlazor.Services.HttpRequests;
 using FinanceManagementBlazor.Services.Home;
 using FinanceManagementBlazor.Services.HttpRequests.Transaction;
 using FinanceManagementBlazor.Entities.Endpoints.Transaction;
+using FinanceManagementBlazor.Storage.Branch;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -61,6 +62,7 @@ builder.Services.AddScoped<AuthModel>();
     #region Storage
     builder.Services.AddScoped<IUserLoggedStorage, UserLoggedStorage>();
     builder.Services.AddScoped<ITokenStorage, TokenStorage>();
+    builder.Services.AddScoped<IBranchStorage, BranchStorage>();
 #endregion
 
 #region Auth
