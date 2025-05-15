@@ -1,35 +1,100 @@
 @page "/Home"
-@using FinanceManagementBlazor.Services.Auth
-@using FinanceManagementBlazor.Storage.Token
-@using Microsoft.AspNetCore.Authorization
-
-@inject AuthProvider auth
-@inject IUserLoggedStorage userStorage
-@inject NavigationManager Navigation
-
+@layout FinanceManagementBlazor.View.Layout.NoMenuLayout
+@inject IHomeService service 
+@inject NavigationManager Navigate
+@inject AuthProvider authProvider
 
 @attribute [Authorize]
 
+<link rel="stylesheet" href="/css/home.css"/>
 
-<h1>Olá! @userName Id: @userId</h1>
-<p>Bem-vindo ao sistema de gerenciamento financeiro.</p>
-<p>Você está logado.</p>
+<ModalScreen Show="showModal" OnSave="async (BranchModel branchInfo) => await SaveBranchAsync(branchInfo)"/>
 
-<button @onclick="Logout">LogOut</button>
+<div class="home-container">
+
+    <h1>Olá, @dependecies.UserName 👋</h1> 
+
+    <DangerButton Text="Sair" OnClick="authProvider.UserLoggedOut"/>
+
+    <div class="resumo">
+        <CardFinance Value=@dependecies.Statistic.Entry.ToString() Type="EFinanceCardType.Revenue" />
+        <CardFinance Value=@dependecies.Statistic.Expense.ToString() Type="EFinanceCardType.Expense" />
+        <CardFinance Value=@dependecies.Statistic.Balance.ToString() Type="EFinanceCardType.Balance" />
+    </div>
+
+    <h2 style="margin-top: 2rem;">Suas Branchs</h2> <AddButton OnClick="() => showModal=true"/>
+
+    <Message context="@messageErro" caption="Erro" messageType="@EMessageType.Error"/>
+
+    @if (dependecies.Branchs.Count == 0)
+    {
+        <h3>Você não possui branchs cadastradas</h3>
+    }
+    else
+    {
+        <div class="branchs-container">
+            @foreach (var branch in dependecies.Branchs)
+            {
+                <BranchCard Name="@branch.Name" Create="@branch.CreatedAt" Description="@branch.Description" OnClick="async () => await GoToBranch(branch)" />
+                <DangerButton Text="Excluir" OnClick="async () => await DeleteBranchAsync(branch.Id)"/>
+            }
+        </div>
+    }
+</div>
 
 @code
 {
-    private string userName = string.Empty;
-    private string userId = string.Empty;
+    #region System Properties
+    public HomeDependecies dependecies = new();
 
-    protected async override Task OnInitializedAsync()
+    public string messageErro = string.Empty;
+    public bool showModal;
+    #endregion
+
+    #region Handlers
+    protected override async Task OnInitializedAsync()
     {
-        var loggedUser = await userStorage.GetItemAsync();
-
-        userName = loggedUser?.Name ?? string.Empty;
-        userId = loggedUser?.Id.ToString() ?? string.Empty;
+        try
+        {
+            dependecies = await service.GetHomeDependenciesAsync();
+        }
+        catch
+        {
+        }
     }
 
-    private async Task Logout() 
-        => await auth.UserLoggedOut();
-} 
+    protected async Task DeleteBranchAsync(int id)
+    {
+        try
+        {
+            await service.DeleteBranchAsync(id.ToString());
+
+            Navigate.NavigateTo(Navigate.Uri, forceLoad: true);
+        }
+        catch(Exception ex)
+        {
+            messageErro = ex.Message;
+        }
+    }
+    protected async Task SaveBranchAsync(BranchModel branchInfo)
+    {
+        try
+        {
+            await service.SaveBranchAsync(branchInfo);
+
+            Navigate.NavigateTo(Navigate.Uri, forceLoad: true);
+        }
+        catch(Exception ex)
+        {
+            messageErro = ex.Message;
+            showModal = false;
+        }
+    }
+    protected async Task GoToBranch(BranchModel branch)
+    {
+        await service.SetBranchStorageAsync(branch);
+
+        Navigate.NavigateTo("Branch");
+    }
+    #endregion
+}

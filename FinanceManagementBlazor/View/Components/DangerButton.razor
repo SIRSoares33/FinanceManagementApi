@@ -1,0 +1,9 @@
+﻿<button class="logout-btn" @onclick="() => {OnClick.InvokeAsync();}">
+    <i class="fas fa-sign-out-alt"></i>
+    @Text
+</button>
+
+@code {
+    [Parameter] public required EventCallback<Task> OnClick { get; set; }
+    [Parameter] public required string Text { get; set; }
+}

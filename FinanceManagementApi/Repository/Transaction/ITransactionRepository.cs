@@ -7,5 +7,6 @@ namespace FinanceManagementApi.Repository.Transaction
         Task AddTransactionAsync(TransactionModel transactionModel);
         Task DeleteTransactionAsync(int transactionId);
         Task UpdateTransactionAsync(int transactionId, TransactionModel transactionModel);
+        Task<List<TransactionModel>> GetAllTransactionsAsync();
     }
 }

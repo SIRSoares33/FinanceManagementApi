@@ -1,0 +1,21 @@
+﻿@using FinanceManagementBlazor.Entities.Enums
+<div class="resumo-card @_cardTypes[Type].Item1">
+	<i class="fas fa-@_cardTypes[Type].Item2"></i>
+	<div>
+		<h3>@_cardTypes[Type].Item1.ToUpper()</h3>
+		<p>R$ @Value</p>
+	</div>
+</div>
+
+@code {
+
+	private Dictionary<EFinanceCardType, (string, string)> _cardTypes = new()
+	{
+		{ EFinanceCardType.Revenue, ("receita", "arrow-up") },
+		{ EFinanceCardType.Expense, ("despesa", "arrow-down") },
+		{ EFinanceCardType.Balance, ("saldo", "wallet") }
+	};
+
+	[Parameter] public string Value { get; set; } = string.Empty;
+	[Parameter] public EFinanceCardType Type { get; set; }
+}

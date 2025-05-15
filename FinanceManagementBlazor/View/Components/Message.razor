@@ -2,9 +2,14 @@
 @using System.ComponentModel.DataAnnotations
 @using FinanceManagementBlazor.Entities.Enums
 
-<div class=@messageTypeToStringMap[messageType] role="alert">
-<strong>@caption:</strong> @context
-</div>
+@if (!string.IsNullOrEmpty(context))
+{
+    <div class=@messageTypeToStringMap[messageType] role="alert">
+        <strong>@caption:</strong> @context
+    </div>
+
+    StateHasChanged();
+}
 
 @code
 {

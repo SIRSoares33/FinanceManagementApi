@@ -456,3 +456,6 @@ FinanceManagementApi/FinanceManagementApi.sln
 FinanceManagementApi/appsettings.json
 FinanceManagementApi/Properties
 FinanceManagementApi/app.sqbpro
+FinanceManagementApi/app.db-shm
+.gitignore
+FinanceManagementApi/app.db-wal

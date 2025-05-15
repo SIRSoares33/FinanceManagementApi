@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace FinanceManagementBlazor
 {
-    public class AuthProvider(IUserLoggedStorage storage) : AuthenticationStateProvider
+    public class AuthProvider(IUserLoggedStorage userStorage, ITokenStorage tokenStorage) : AuthenticationStateProvider
     {
         #region Methods
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var loggedUser = await storage.GetItemAsync();
+            var loggedUser = await userStorage.GetItemAsync();
             
             var claimsPrincipal = loggedUser is null ? 
                 new ClaimsPrincipal( new ClaimsIdentity() ) :  
@@ -19,14 +19,18 @@ namespace FinanceManagementBlazor
             return new(claimsPrincipal);
         }
 
-        public async Task UserLoggedIn(LoggedUserModel loggedUser)
+        public async Task UserLoggedIn(LoggedUserModel loggedUser, string token)
         {
-            await storage.SetItemAsync(loggedUser);
+            await userStorage.SetItemAsync(loggedUser);
+            await tokenStorage.SetItemAsync(token);
+            
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
         public async Task UserLoggedOut()
         {
-            await storage.RemoveItemAsync();
+            await userStorage.RemoveItemAsync();
+            await tokenStorage.RemoveItemAsync();
+
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
         #endregion

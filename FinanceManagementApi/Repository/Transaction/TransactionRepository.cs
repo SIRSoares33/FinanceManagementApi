@@ -24,6 +24,9 @@ namespace FinanceManagementApi.Repository.Transaction
             await context.Save();
         }
 
+        public async Task<List<TransactionModel>> GetAllTransactionsAsync()
+            => await context.Transactions.ToListAsync();
+
         private async Task<TransactionModel> GetTransactionByIdAsync(int transactionId)
             => await context.Transactions.FirstOrDefaultAsync(x => x.Id == transactionId) 
                 ?? throw new Exception("Transação não encontrada.");

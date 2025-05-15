@@ -1,0 +1,12 @@
+﻿<div class="branch-card" @onclick="OnClick.InvokeAsync">
+    <div>
+        <h3>@Name</h3>
+        <p>Criado em: @Create</p> <p>Descrição: @Description</p>
+    </div>
+</div>
+@code {
+    [Parameter] public required EventCallback<Task> OnClick { get; set; }
+    [Parameter] public string Name { get; set; } = string.Empty;
+    [Parameter] public string Create { get; set; } = string.Empty;
+    [Parameter] public string Description { get; set; } = string.Empty;
+}

@@ -14,36 +14,59 @@ using FinanceManagementBlazor.Services.HttpRequests.Endpoints.BaseEndpoint;
 using FinanceManagementBlazor.Storage.Token;
 using System.IdentityModel.Tokens.Jwt;
 using FinanceManagementBlazor.Services.JwtParser;
+using FinanceManagementBlazor.Services.HttpRequests.Branch;
+using FinanceManagementBlazor.Entities.Endpoints.BranchEndpoints;
+using FinanceManagementBlazor.Services.HttpRequests;
+using FinanceManagementBlazor.Services.Home;
+using FinanceManagementBlazor.Services.HttpRequests.Transaction;
+using FinanceManagementBlazor.Entities.Endpoints.Transaction;
+using FinanceManagementBlazor.Storage.Branch;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
 builder.Services.AddBlazoredLocalStorage();
 
 #region Services
     builder.Services.AddScoped<IAuthService, AuthService>();
+    builder.Services.AddScoped<IHomeService, HomeService>();
 
-    #region Models
-    builder.Services.AddScoped<AuthModel>();
+    #region Http    
+    builder.Services.AddSingleton(sp => new HttpClient
+    {
+        BaseAddress = new Uri(ServerEndpoint.Base)
+    });
+    builder.Services.AddScoped<IHttpService, HttpService>();
+#endregion
+
+#region Models
+builder.Services.AddScoped<AuthModel>();
     #endregion
 
     #region HttpRequests Services
     // Endpoints
     builder.Services.AddScoped<IAuthEndpoints, AuthEndpoints>();
-    builder.Services.AddScoped<IServerEndpoint, ServerEndpoint>();
+    builder.Services.AddScoped<IBranchEndpoints, BranchEndpoints>();
+    builder.Services.AddScoped<ITransactionEndpoints, TransactionEndpoints>();
     // Requests
     builder.Services.AddScoped<ILoginHttpService, LoginHttpService>();
     builder.Services.AddScoped<IRegisterHttpService, RegisterHttpService>();
+    // Branch
+    builder.Services.AddScoped<IBranchHttpService, BranchHttpService>();
+    // Transaction
+    builder.Services.AddScoped<ITransactionHttpService, TransactionHttpService>();   
     #endregion
 
     #region Storage
     builder.Services.AddScoped<IUserLoggedStorage, UserLoggedStorage>();
-    #endregion
+    builder.Services.AddScoped<ITokenStorage, TokenStorage>();
+    builder.Services.AddScoped<IBranchStorage, BranchStorage>();
+#endregion
 
-    #region Auth
-    builder.Services.AddAuthorizationCore();
+#region Auth
+builder.Services.AddAuthorizationCore();
     builder.Services.AddScoped<AuthProvider>();
     builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<AuthProvider>());
     builder.Services.AddScoped<JwtSecurityTokenHandler>();

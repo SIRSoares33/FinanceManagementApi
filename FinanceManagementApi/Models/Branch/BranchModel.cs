@@ -24,6 +24,7 @@ namespace FinanceManagementApi.Models.Branch
         [JsonIgnore]
         public UserModel? User { get; set; }
 
+        [JsonIgnore]
         public ICollection<TransactionModel>? Transactions { get; set; } = [];
     }
 }
