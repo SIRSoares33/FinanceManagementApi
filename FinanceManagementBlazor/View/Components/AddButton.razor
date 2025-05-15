@@ -1,8 +1,8 @@
-﻿<button class="btn btn-success" @onclick="OnClick.Invoke">
+﻿<button class="btn btn-success" @onclick="() => OnClick.InvokeAsync(null)">
     <i class="bi bi-plus-circle"></i> Adicionar
 </button>
 
 
 @code {
-    [Parameter] public required Action OnClick { get; set; } 
+    [Parameter] public required EventCallback<Task> OnClick { get; set; } 
 }

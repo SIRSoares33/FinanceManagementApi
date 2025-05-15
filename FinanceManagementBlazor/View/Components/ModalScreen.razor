@@ -8,7 +8,7 @@
             <Entry Label="Nome" Placeholder="Nome da branch" @bind-Value="@name" />
             <Entry Label="Descrição" Placeholder="Descrição da Branch (Opcional)" @bind-Value="@description"/>
             <div class="modal-actions">
-                <button class="btn salvar" @onclick="() => OnSave.Invoke( new(name, description) )">Salvar</button>
+                <button class="btn salvar" @onclick="() => OnSave.InvokeAsync( new(name, description) )">Salvar</button>
                 <button class="btn cancelar" @onclick="() => { Show = false; } ">Cancelar</button>
             </div>
         </div>
@@ -76,5 +76,5 @@
     private string description = string.Empty;
 
     [Parameter] public bool Show { get; set; }
-    [Parameter] public required Action<BranchModel> OnSave { get; set; } 
+    [Parameter] public required EventCallback<BranchModel> OnSave { get; set; } 
 }

@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" href="/css/home.css"/>
 
-<ModalScreen Show="showModal" OnSave="async (BranchModel branchInfo) => { await SaveBranchAsync(branchInfo); }"/>
+<ModalScreen Show="showModal" OnSave="async (BranchModel branchInfo) => await SaveBranchAsync(branchInfo)"/>
 
 <div class="home-container">
 
@@ -22,10 +22,10 @@
         <CardFinance Value=@dependecies.Statistic.Balance.ToString() Type="EFinanceCardType.Balance" />
     </div>
 
-    <h2 style="margin-top: 2rem;">Suas Branchs</h2> <AddButton OnClick="() => {showModal=true; StateHasChanged();}"/>
+    <h2 style="margin-top: 2rem;">Suas Branchs</h2> <AddButton OnClick="() => showModal=true"/>
 
     <Message context="@messageErro" caption="Erro" messageType="@EMessageType.Error"/>
-    
+
     @if (dependecies.Branchs.Count == 0)
     {
         <h3>Você não possui branchs cadastradas</h3>
@@ -35,8 +35,8 @@
         <div class="branchs-container">
             @foreach (var branch in dependecies.Branchs)
             {
-                <BranchCard Name="@branch.Name" Create="@branch.CreatedAt" Description="@branch.Description"/>
-                <DangerButton Text="Excluir" OnClick="async () => { await DeleteBranchAsync(branch.Id); }"/>
+                <BranchCard Name="@branch.Name" Create="@branch.CreatedAt" Description="@branch.Description" OnClick="async () => await GoToBranch(branch)" />
+                <DangerButton Text="Excluir" OnClick="async () => await DeleteBranchAsync(branch.Id)"/>
             }
         </div>
     }
@@ -56,7 +56,7 @@
     {
         try
         {
-            dependecies = await service.GetHomeDependencies();
+            dependecies = await service.GetHomeDependenciesAsync();
         }
         catch
         {
@@ -89,6 +89,12 @@
             messageErro = ex.Message;
             showModal = false;
         }
+    }
+    protected async Task GoToBranch(BranchModel branch)
+    {
+        await service.SetBranchStorageAsync(branch);
+
+        Navigate.NavigateTo("Branch");
     }
     #endregion
 }
