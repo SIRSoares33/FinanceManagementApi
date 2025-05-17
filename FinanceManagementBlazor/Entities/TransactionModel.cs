@@ -11,11 +11,9 @@ namespace FinanceManagementBlazor.Entities
         public string Name { get; set; } = string.Empty;
         
         [JsonPropertyName("description")]
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; } = "Sem descrição.";
         
-        [JsonPropertyName("category")]
-        public string Category { get; set; } = string.Empty;
-        
+
         [JsonPropertyName("amount")]
         public decimal Amount { get; set; }
 
@@ -23,7 +21,7 @@ namespace FinanceManagementBlazor.Entities
         public bool IsEntry { get; set; }
 
         [JsonPropertyName("transactionDate")]
-        public string TransactionDate { get; set; } = string.Empty;
+        public string TransactionDate { get; set; } = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
         [JsonPropertyName("branchId")]
         public int BranchId { get; set; }

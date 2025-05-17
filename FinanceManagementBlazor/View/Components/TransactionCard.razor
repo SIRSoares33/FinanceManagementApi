@@ -1,0 +1,18 @@
+﻿<div class="branch-card">
+    <div>
+        <h3>@model.Name</h3>
+        <p>Criado em: @model.TransactionDate</p> <p>Descrição: @model.Description</p>
+
+        @if (model.IsEntry)
+        {
+            <p>Entrada: R$@model.Amount</p>
+        }
+        else
+        {
+            <p>Saida: -R$@model.Amount</p>
+        }
+    </div>
+</div>
+@code {
+    [Parameter] public required TransactionModel model { get; set; }
+}

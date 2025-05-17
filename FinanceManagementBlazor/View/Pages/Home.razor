@@ -6,15 +6,15 @@
 
 @attribute [Authorize]
 
-<link rel="stylesheet" href="/css/home.css"/>
+<link rel="stylesheet" href="/css/home.css" />
 
-<ModalScreen Show="showModal" OnSave="async (BranchModel branchInfo) => await SaveBranchAsync(branchInfo)"/>
+<BranchModalScreen Show="showModal" OnSave="async (BranchModel branchInfo) => await SaveBranchAsync(branchInfo)" />
 
 <div class="home-container">
 
-    <h1>Olá, @dependecies.UserName 👋</h1> 
+    <h1>Olá, @dependecies.UserName 👋</h1>
 
-    <DangerButton Text="Sair" OnClick="authProvider.UserLoggedOut"/>
+    <DangerButton Text="Sair" OnClick="authProvider.UserLoggedOut" />
 
     <div class="resumo">
         <CardFinance Value=@dependecies.Statistic.Entry.ToString() Type="EFinanceCardType.Revenue" />
@@ -22,9 +22,9 @@
         <CardFinance Value=@dependecies.Statistic.Balance.ToString() Type="EFinanceCardType.Balance" />
     </div>
 
-    <h2 style="margin-top: 2rem;">Suas Branchs</h2> <AddButton OnClick="() => showModal=true"/>
+    <h2 style="margin-top: 2rem;">Suas Branchs</h2> <AddButton OnClick="() => showModal=true" />
 
-    <Message context="@messageErro" caption="Erro" messageType="@EMessageType.Error"/>
+    <Message context="@messageErro" caption="Erro" messageType="@EMessageType.Error" />
 
     @if (dependecies.Branchs.Count == 0)
     {
@@ -36,7 +36,7 @@
             @foreach (var branch in dependecies.Branchs)
             {
                 <BranchCard Name="@branch.Name" Create="@branch.CreatedAt" Description="@branch.Description" OnClick="async () => await GoToBranch(branch)" />
-                <DangerButton Text="Excluir" OnClick="async () => await DeleteBranchAsync(branch.Id)"/>
+                <DangerButton Text="Excluir" OnClick="async () => await DeleteBranchAsync(branch.Id)" />
             }
         </div>
     }

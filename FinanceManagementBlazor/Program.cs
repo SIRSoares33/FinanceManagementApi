@@ -21,6 +21,7 @@ using FinanceManagementBlazor.Services.Home;
 using FinanceManagementBlazor.Services.HttpRequests.Transaction;
 using FinanceManagementBlazor.Entities.Endpoints.Transaction;
 using FinanceManagementBlazor.Storage.Branch;
+using FinanceManagementBlazor.Services.Branch;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -32,6 +33,7 @@ builder.Services.AddBlazoredLocalStorage();
 #region Services
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IHomeService, HomeService>();
+    builder.Services.AddScoped<IBranchService, BranchService>();
 
     #region Http    
     builder.Services.AddSingleton(sp => new HttpClient
@@ -56,7 +58,8 @@ builder.Services.AddScoped<AuthModel>();
     // Branch
     builder.Services.AddScoped<IBranchHttpService, BranchHttpService>();
     // Transaction
-    builder.Services.AddScoped<ITransactionHttpService, TransactionHttpService>();   
+    builder.Services.AddScoped<ITransactionHttpService, TransactionHttpService>();
+    builder.Services.AddScoped<ITransactionEndpoints, TransactionEndpoints>();
     #endregion
 
     #region Storage

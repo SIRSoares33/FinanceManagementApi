@@ -1,0 +1,83 @@
+﻿@page "/Branch"
+@using FinanceManagementBlazor.Services.Branch
+
+@layout NoMenuLayout
+
+@inject IBranchService service
+@inject NavigationManager Navigate
+
+<link rel="stylesheet" href="/css/home.css" />
+
+<TransactionModalScreen Show="showModal" OnSave="async (TransactionModel transaction) => await SaveTransactionAsync(transaction)" />
+
+<div class="home-container">
+
+    <h1>Branch: @dependencies.Branch.Name 👋</h1>
+
+    <DangerButton Text="Home" OnClick="GoToHome" />
+
+    <div class="resumo">
+        <CardFinance Value=@dependencies.Statistic.Entry.ToString() Type="EFinanceCardType.Revenue" />
+        <CardFinance Value=@dependencies.Statistic.Expense.ToString() Type="EFinanceCardType.Expense" />
+        <CardFinance Value=@dependencies.Statistic.Balance.ToString() Type="EFinanceCardType.Balance" />
+    </div>
+
+    <h2 style="margin-top: 2rem;">Suas Transações</h2> <AddButton OnClick="() => showModal=true" />
+
+    <Message context="@messageErro" caption="Erro" messageType="@EMessageType.Error" />
+
+    @if (dependencies.Transactions.Count == 0)
+    {
+        <h3>Você não possui transações cadastradas</h3>
+    }
+    else
+    {
+        <div class="branchs-container">
+            @foreach (var transaction in dependencies.Transactions)
+            {
+                <TransactionCard model="transaction"/>
+                <DangerButton Text="Excluir" OnClick="async () => await DeleteTransactionAsync(transaction.Id)" />
+            }
+        </div>
+    }
+</div>
+
+
+@code {
+    private bool showModal;
+    private string messageErro = string.Empty;
+
+    protected BranchViewDependencies dependencies = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        dependencies = await service.GetBranchViewDependenciesAsync();
+    }
+
+    protected async Task DeleteTransactionAsync(int id)
+    {
+        try
+        {
+            await service.DeleteTransactionAsync(id);
+            Navigate.NavigateTo(Navigate.Uri, forceLoad: true);
+        }
+        catch(Exception ex)
+        {
+            messageErro = ex.Message;
+        }
+    }
+    protected async Task SaveTransactionAsync(TransactionModel transaction)
+    {
+        try
+        {
+            await service.SaveTransactionAsync(transaction);
+            Navigate.NavigateTo(Navigate.Uri, forceLoad: true);
+        }
+        catch (Exception ex)
+        {
+            messageErro = ex.Message;
+        }
+    }
+    protected void GoToHome()
+        => Navigate.NavigateTo("Home");
+}

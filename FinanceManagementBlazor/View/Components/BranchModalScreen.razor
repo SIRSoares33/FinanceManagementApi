@@ -1,0 +1,29 @@
+﻿@using FinanceManagementBlazor.Entities
+
+<link rel="stylesheet" href="/css/ScreenModal.css" />
+
+@if (Show)
+{
+    <div class="modal-overlay">
+        <div class="modal-box">
+            <h4>Adicionar Campo</h4>
+            <Entry Label="Nome" Placeholder="Nome da branch" @bind-Value="@name" />
+            <Entry Label="Descrição" Placeholder="Descrição da Branch (Opcional)" @bind-Value="@description"/>
+            <div class="modal-actions">
+                <button class="btn salvar" @onclick="() => OnSave.InvokeAsync( new(name, description) )">Salvar</button>
+                <button class="btn cancelar" @onclick="() => { Show = false; } ">Cancelar</button>
+            </div>
+        </div>
+    </div>
+}
+<style>
+   
+</style>
+
+@code {
+    private string name = string.Empty;
+    private string description = string.Empty;
+
+    [Parameter] public bool Show { get; set; }
+    [Parameter] public required EventCallback<BranchModel> OnSave { get; set; } 
+}
