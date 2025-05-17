@@ -1,4 +1,5 @@
-﻿using FinanceManagementBlazor.Services.HttpRequests.Transaction;
+﻿using FinanceManagementBlazor.Entities;
+using FinanceManagementBlazor.Services.HttpRequests.Transaction;
 
 /// <summary>
 /// Define os serviços HTTP relacionados a transações financeiras.
@@ -12,4 +13,7 @@ public interface ITransactionHttpService
     /// <param name="id">Identificador utilizado para buscar as estatísticas.</param>
     /// <returns>Um objeto <see cref="TransactionStatisticModel"/> contendo entrada, despesa e saldo.</returns>
     Task<TransactionStatisticModel> GetStatisticAsync(int id);
+    Task<List<TransactionModel>> GetTransactionsAsync(int branchId);
+    Task AddTransactionAsync(TransactionModel model);
+    Task RemoveTransactionAsync(int id);
 }

@@ -1,0 +1,29 @@
+﻿<link rel="stylesheet" href="/css/ScreenModal.css" />
+
+@if (Show)
+{
+    <div class="modal-overlay">
+        <div class="modal-box">
+            <h4>Adicionar Transação</h4>
+            <Entry Label="Nome" Placeholder="Nome da Transação" @bind-Value="@transaction.Name" />
+            <Entry Label="Descrição" Placeholder="Descrição da Transação (Opcional)" @bind-Value="@transaction.Description" />
+            <input @bind=@transaction.Amount placeholder="Digite o valor"></input>
+            <InputCheckbox @bind-value="@transaction.IsEntry">É uma entrada?</InputCheckbox>
+
+            <div class="modal-actions">
+                <button class="btn salvar" @onclick="() => OnSave.InvokeAsync( transaction )">Salvar</button>
+                <button class="btn cancelar" @onclick="() => { Show = false; } ">Cancelar</button>
+            </div>
+        </div>
+    </div>
+}
+<style>
+
+</style>
+
+@code {
+    private TransactionModel transaction = new();
+    
+    [Parameter] public bool Show { get; set; }
+    [Parameter] public required EventCallback<TransactionModel> OnSave { get; set; }
+}
