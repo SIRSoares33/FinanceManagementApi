@@ -1,4 +1,4 @@
-using FinanceManagementApi.Models.User;
+using FinanceManagementApi.Context.Tables;
 
 namespace FinanceManagementApi.Repository.User
 {
@@ -12,19 +12,19 @@ namespace FinanceManagementApi.Repository.User
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        Task<UserModel?> GetUserByEmail(string email);
+        Task<UserTable?> GetUserByEmail(string email);
         /// <summary>
         /// Realiza o cadastro do usuário.
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task AddUserAsync(UserModel model);
+        Task AddUserAsync(UserTable model);
         /// <summary>
         /// Deleta um usuário.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task DeleteUserAsync(UserModel userToDelete);
+        Task DeleteUserAsync(UserTable userToDelete);
         /// <summary>
         /// Verifica se um email já existe no banco de dados.
         /// </summary>
@@ -36,6 +36,6 @@ namespace FinanceManagementApi.Repository.User
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<UserModel?> GetUserById(int id);
+        Task<UserTable?> GetUserById(int id);
     }
 }

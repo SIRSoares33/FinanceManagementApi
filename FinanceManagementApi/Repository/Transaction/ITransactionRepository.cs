@@ -1,12 +1,11 @@
-using FinanceManagementApi.Models.Transaction;
+using FinanceManagementApi.Context.Tables;
 
-namespace FinanceManagementApi.Repository.Transaction
+namespace FinanceManagementApi.Repository.Transaction;
+
+public interface ITransactionRepository
 {
-    public interface ITransactionRepository
-    {
-        Task AddTransactionAsync(TransactionModel transactionModel);
-        Task DeleteTransactionAsync(int transactionId);
-        Task UpdateTransactionAsync(int transactionId, TransactionModel transactionModel);
-        Task<List<TransactionModel>> GetAllTransactionsAsync();
-    }
+    Task AddTransactionAsync(TransactionTable transactionModel);
+    Task DeleteTransactionAsync(int transactionId);
+    Task UpdateTransactionAsync(int transactionId, TransactionTable transactionModel);
+    Task<List<TransactionTable>> GetAllTransactionsAsync();
 }

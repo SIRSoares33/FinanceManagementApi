@@ -1,0 +1,43 @@
+@page "/Register"
+@layout FinanceManagementBlazor.View.Layout.NoMenuLayout
+
+@inject IUserLoggedStorage userStorage
+@inject IAuthService authService
+@inject RegisterDto RegisterDto
+@inject NavigationManager Navigation
+
+
+<link rel="stylesheet" href="/css/login.css"/>
+
+<div class="d-flex justify-content-center align-items-center vh-100 login-container">
+    <div class="card login-card">
+        <h3 class="text-center login-title">Inscrever-se</h3>
+        
+        @if(string.IsNullOrEmpty(messageErro) is false)
+        {
+            <Message caption="Erro" context="@messageErro" messageType="EMessageType.Error"/>
+        }
+        @if(string.IsNullOrEmpty(messageSuccess) is false)
+        {
+            <Message caption="Sucesso" context="@messageSuccess" messageType="EMessageType.Success"/>
+        }
+
+        <Entry type="name" label="Nome" placeholder="Como podemos te chamar?" @bind-Value="RegisterDto.Name"></Entry>
+        <Entry type="email" label="Email" placeholder="Digite seu email." @bind-Value="RegisterDto.Email"></Entry>
+        <Entry type="password" label="Senha" placeholder="Digite sua senha." @bind-Value="RegisterDto.Password"></Entry>
+
+        <div class="d-grid gap-3 mt-4">
+            <button type="button" class="btn btn-outline-success fw-bold rounded-pill shadow-sm register-button" @onclick="OnRegister" disabled="@isLoading">
+                @if (isLoading)
+                {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"/>
+                }
+                Registrar-se
+            </button>
+
+            <button type="button" class="btn btn-primary btn-lg fw-bold rounded-pill shadow-sm login-button" @onclick="OnLogin">
+                Login
+            </button>
+        </div>
+    </div>
+</div>

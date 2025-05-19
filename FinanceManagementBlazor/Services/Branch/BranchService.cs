@@ -1,4 +1,4 @@
-﻿using FinanceManagementBlazor.Entities;
+﻿using Finance.Dtos;
 using FinanceManagementBlazor.Services.HttpRequests.Transaction;
 using FinanceManagementBlazor.Storage.Branch;
 
@@ -12,7 +12,7 @@ public class BranchService(ITransactionHttpService transactionHttp, IBranchStora
 
         return new() { Branch = branch, Transactions= await transactionHttp.GetTransactionsAsync(branch.Id), Statistic = await transactionHttp.GetStatisticAsync(branch.Id) };
     }
-    public async Task SaveTransactionAsync(TransactionModel model)
+    public async Task SaveTransactionAsync(TransactionDto model)
     {
         model.BranchId = (await branchStorage.GetItemAsync())?.Id ?? throw new Exception();
         await transactionHttp.AddTransactionAsync(model);
@@ -23,7 +23,7 @@ public class BranchService(ITransactionHttpService transactionHttp, IBranchStora
 
 public class BranchViewDependencies
 {
-    public BranchModel Branch { get; set; } = new(string.Empty, string.Empty);
-    public List<TransactionModel> Transactions { get; set; } = [];
-    public TransactionStatisticModel Statistic { get; set; } = new();
+    public BranchDto Branch { get; set; } = new();
+    public List<TransactionDto> Transactions { get; set; } = [];
+    public TransactionStatisticDto Statistic { get; set; } = new();
 }

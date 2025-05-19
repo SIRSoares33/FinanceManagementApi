@@ -1,20 +1,20 @@
-using FinanceManagementApi.Models.Transaction;
+using Finance.Dtos;
+using FinanceManagementApi.Context.Tables;
 
-namespace FinanceManagementApi.Services.Transaction
+namespace FinanceManagementApi.Services.Transaction;
+
+public class TransactionService : ITransactionService
 {
-    public class TransactionService : ITransactionService
+    public TransactionStatisticDto GetTransactionStatistic(List<TransactionTable> transactions)
     {
-        public TransactionStatistic GetTransactionStatistic(List<TransactionModel> transactions)
-        {
-            var entry   = transactions.Where(x => x.IsEntry).Sum(x => x.Amount);
-            var expense = transactions.Where(x => !x.IsEntry).Sum(x => x.Amount);
+        var entry   = transactions.Where(x => x.IsEntry).Sum(x => x.Amount);
+        var expense = transactions.Where(x => !x.IsEntry).Sum(x => x.Amount);
 
-            return new ()
-            {
-                Entry   = entry,
-                Expense = expense,
-                Balance = entry - expense
-            };
-        }
+        return new ()
+        {
+            Entry   = entry,
+            Expense = expense,
+            Balance = entry - expense
+        };
     }
 }

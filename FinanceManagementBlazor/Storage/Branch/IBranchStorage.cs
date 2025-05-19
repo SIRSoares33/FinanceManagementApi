@@ -1,7 +1,7 @@
-﻿using FinanceManagementBlazor.Entities;
+﻿using Finance.Dtos;
 
 namespace FinanceManagementBlazor.Storage.Branch;
 
-public interface IBranchStorage : ILocalStorageManager<BranchModel>
+public interface IBranchStorage : ILocalStorageManager<BranchDto>
 {
 }

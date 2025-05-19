@@ -1,14 +1,14 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using FinanceManagementApi.Models.User;
+using FinanceManagementApi.Context.Tables;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FinanceManagementApi.Services.Token
 {
     public class TokenJwtService : ITokenService
     {
-        public string GenerateToken(UserModel user)
+        public string GenerateToken(UserTable user)
         {
             var claims = new[]
             {

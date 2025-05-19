@@ -1,6 +1,4 @@
-using FinanceManagementApi.Models.Branch;
-using FinanceManagementApi.Models.Transaction;
-using FinanceManagementApi.Models.User;
+using FinanceManagementApi.Context.Tables;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManagementApi.Context
@@ -13,17 +11,17 @@ namespace FinanceManagementApi.Context
         /// <summary>
         /// Representa a tabela de usuários no banco de dados.
         /// </summary>
-        DbSet<UserModel> Users { get; set; }
+        DbSet<UserTable> Users { get; set; }
 
         /// <summary>
         /// Representa a tabela de branches no banco de dados.
         /// </summary>
-        DbSet<BranchModel> Branches { get; set; }
+        DbSet<BranchTable> Branches { get; set; }
 
         /// <summary>
         /// Representa a tabela de transações no banco de dados.
         /// </summary>
-        DbSet<TransactionModel> Transactions { get; set; }
+        DbSet<TransactionTable> Transactions { get; set; }
 
         /// <summary>
         /// Salva as alterações realizadas no contexto do banco de dados.

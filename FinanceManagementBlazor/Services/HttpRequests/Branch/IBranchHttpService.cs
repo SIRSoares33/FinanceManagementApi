@@ -1,4 +1,4 @@
-using FinanceManagementBlazor.Entities;
+using Finance.Dtos;
 
 /// <summary>
 /// Define os serviços HTTP relacionados às filiais.
@@ -9,8 +9,8 @@ public interface IBranchHttpService
     /// <summary>
     /// Obtém a lista de todas as filiais cadastradas.
     /// </summary>
-    /// <returns>Uma lista de objetos <see cref="BranchModel"/>.</returns>
-    Task<List<BranchModel>> GetAllBranchsAsync();
+    /// <returns>Uma lista de objetos <see cref="BranchDto"/>.</returns>
+    Task<List<BranchDto>> GetAllBranchsAsync();
 
     /// <summary>
     /// Exclui uma filial a partir do identificador informado.
@@ -22,5 +22,5 @@ public interface IBranchHttpService
     /// Cria uma nova filial com as informações fornecidas.
     /// </summary>
     /// <param name="model">Objeto contendo os dados da filial.</param>
-    Task CreateBranch(BranchModel model);
+    Task CreateBranch(BranchDto model);
 }

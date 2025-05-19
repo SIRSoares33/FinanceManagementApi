@@ -1,5 +1,4 @@
-using FinanceManagementApi.Models.Login;
-using FinanceManagementApi.Models.User;
+using FinanceManagementApi.Context.Tables;
 
 namespace FinanceManagementApi.Services.Auth;
 
@@ -13,13 +12,13 @@ public interface IAuthService
     /// </summary>
     /// <param name="model">Modelo contendo o email e a senha do usuário.</param>
     /// <returns>Token JWT gerado se as credenciais forem válidas; caso contrário, <c>null</c>.</returns>
-    Task<string?> LoginAsync(LoginModel model);
+    Task<string?> LoginAsync(UserTable model);
 
     /// <summary>
     /// Registra um novo usuário no sistema.
     /// </summary>
     /// <param name="model">Modelo contendo os dados do novo usuário.</param>
-    Task RegisterAsync(UserModel model);
+    Task RegisterAsync(UserTable model);
 
     /// <summary>
     /// Exclui um usuário com base no seu identificador.

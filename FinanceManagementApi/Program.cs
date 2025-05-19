@@ -1,6 +1,6 @@
 using System.Text;
 using FinanceManagementApi.Context;
-using FinanceManagementApi.Models.User;
+using FinanceManagementApi.Context.Tables;
 using FinanceManagementApi.Repository;
 using FinanceManagementApi.Repository.Branch;
 using FinanceManagementApi.Repository.Transaction;
@@ -79,9 +79,11 @@ builder.Services.AddSingleton<ITokenService, TokenJwtService>();
 //AuthService
 builder.Services.AddScoped<IAuthService, AuthService>();
 // PasswordHasher
-builder.Services.AddSingleton<IPasswordHasher<IUserEmailAndPassword>, PasswordHasher<IUserEmailAndPassword>>();
+builder.Services.AddSingleton<IPasswordHasher<UserTable>, PasswordHasher<UserTable>>();
 // TransactionService
 builder.Services.AddSingleton<ITransactionService, TransactionService>();
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
 #endregion
 
 var app = builder.Build();

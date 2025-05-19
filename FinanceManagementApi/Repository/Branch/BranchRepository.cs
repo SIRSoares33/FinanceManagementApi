@@ -1,5 +1,5 @@
 using FinanceManagementApi.Context;
-using FinanceManagementApi.Models.Branch;
+using FinanceManagementApi.Context.Tables;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManagementApi.Repository.Branch
@@ -8,7 +8,7 @@ namespace FinanceManagementApi.Repository.Branch
     {
         #region Methods
         // IBranchRepository
-        public async Task CreateBranchAsync(BranchModel branchModel)
+        public async Task CreateBranchAsync(BranchTable branchModel)
         {
             await context.Branches.AddAsync(branchModel);
             await context.Save();
@@ -22,7 +22,7 @@ namespace FinanceManagementApi.Repository.Branch
             await context.Save();
         }
 
-        public async Task UpdateBranchAsync(int branchId, BranchModel branchModel)
+        public async Task UpdateBranchAsync(int branchId, BranchTable branchModel)
         {
             await DeleteBranchAsync(branchId);
 
@@ -32,14 +32,14 @@ namespace FinanceManagementApi.Repository.Branch
             await context.Save();
         }
 
-        public async Task<BranchModel> GetBranchByIdAsync(int id)
+        public async Task<BranchTable> GetBranchByIdAsync(int id)
         {
             return await context.Branches
                 .Include(x => x.User)
                 .FirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("Branch não encontrada.");
         }
 
-        public async Task<List<BranchModel>> GetAllBranchsByUserIdAsync(int userId)
+        public async Task<List<BranchTable>> GetAllBranchsByUserIdAsync(int userId)
         {
             var user = await context.Users
                 .Include(x => x.Branches)

@@ -1,4 +1,4 @@
-using FinanceManagementApi.Models.User;
+using FinanceManagementApi.Context.Tables;
 
 namespace FinanceManagementApi.Services.Token
 {
@@ -12,6 +12,6 @@ namespace FinanceManagementApi.Services.Token
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        string GenerateToken(UserModel user);
+        string GenerateToken(UserTable user);
     }
 }

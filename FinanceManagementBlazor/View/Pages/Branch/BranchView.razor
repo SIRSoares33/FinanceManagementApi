@@ -1,14 +1,14 @@
 ﻿@page "/Branch"
-@using FinanceManagementBlazor.Services.Branch
 
 @layout NoMenuLayout
 
 @inject IBranchService service
 @inject NavigationManager Navigate
 
+
 <link rel="stylesheet" href="/css/home.css" />
 
-<TransactionModalScreen Show="showModal" OnSave="async (TransactionModel transaction) => await SaveTransactionAsync(transaction)" />
+<TransactionModalScreen Show="showModal" OnSave="async (TransactionDto transaction) => await SaveTransactionAsync(transaction)" />
 
 <div class="home-container">
 
@@ -41,43 +41,3 @@
         </div>
     }
 </div>
-
-
-@code {
-    private bool showModal;
-    private string messageErro = string.Empty;
-
-    protected BranchViewDependencies dependencies = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        dependencies = await service.GetBranchViewDependenciesAsync();
-    }
-
-    protected async Task DeleteTransactionAsync(int id)
-    {
-        try
-        {
-            await service.DeleteTransactionAsync(id);
-            Navigate.NavigateTo(Navigate.Uri, forceLoad: true);
-        }
-        catch(Exception ex)
-        {
-            messageErro = ex.Message;
-        }
-    }
-    protected async Task SaveTransactionAsync(TransactionModel transaction)
-    {
-        try
-        {
-            await service.SaveTransactionAsync(transaction);
-            Navigate.NavigateTo(Navigate.Uri, forceLoad: true);
-        }
-        catch (Exception ex)
-        {
-            messageErro = ex.Message;
-        }
-    }
-    protected void GoToHome()
-        => Navigate.NavigateTo("Home");
-}

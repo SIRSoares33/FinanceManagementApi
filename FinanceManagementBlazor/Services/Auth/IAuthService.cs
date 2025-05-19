@@ -1,3 +1,4 @@
+using Finance.Dtos;
 using FinanceManagementBlazor.Entities;
 
 namespace FinanceManagementBlazor.Services.Auth
@@ -10,13 +11,13 @@ namespace FinanceManagementBlazor.Services.Auth
         /// <summary>
         /// Registra um novo usuário no sistema.
         /// </summary>
-        /// <param name="authModel">O modelo contendo as informações do usuário.</param>
-        Task Register(AuthModel authModel);
+        /// <param name="dto">O modelo contendo as informações do usuário.</param>
+        Task Register(RegisterDto dto);
 
         /// <summary>
         /// Realiza o login de um usuário no sistema.
         /// </summary>
-        /// <param name="authModel">O modelo contendo as credenciais do usuário.</param>
-        Task Login(AuthModel authModel);
+        /// <param name="dto">O modelo contendo as credenciais do usuário.</param>
+        Task Login(LoginDto dto);
     }
 }

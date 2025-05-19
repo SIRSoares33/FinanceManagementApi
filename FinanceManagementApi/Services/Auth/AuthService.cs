@@ -1,5 +1,4 @@
-using FinanceManagementApi.Models.Login;
-using FinanceManagementApi.Models.User;
+using FinanceManagementApi.Context.Tables;
 using FinanceManagementApi.Repository.User;
 using FinanceManagementApi.Services.Auth;
 using FinanceManagementApi.Services.Token;
@@ -7,10 +6,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FinanceManagementApi.Services.Login
 {
-    public class AuthService(IUserRepository repository, ITokenService tokenService, IPasswordHasher<IUserEmailAndPassword> hasher)
+    public class AuthService(IUserRepository repository, ITokenService tokenService, IPasswordHasher<UserTable> hasher)
         : IAuthService
     {
-        public async Task<string?> LoginAsync(LoginModel model)
+        public async Task<string?> LoginAsync(UserTable model)
         {
             var user = await repository.GetUserByEmail(model.Email);
 
@@ -21,7 +20,7 @@ namespace FinanceManagementApi.Services.Login
             ? tokenService.GenerateToken(user) : null;
         }
 
-        public async Task RegisterAsync(UserModel model)
+        public async Task RegisterAsync(UserTable model)
         {
             if (await repository.VerifyEmailExistsInDb(model.Email))
                 throw new Exception("Email já existente.");

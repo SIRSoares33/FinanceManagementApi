@@ -1,9 +1,9 @@
-using FinanceManagementApi.Models.Transaction;
+using Finance.Dtos;
+using FinanceManagementApi.Context.Tables;
 
-namespace FinanceManagementApi.Services.Transaction
+namespace FinanceManagementApi.Services.Transaction;
+
+public interface ITransactionService
 {
-    public interface ITransactionService
-    {
-        TransactionStatistic GetTransactionStatistic(List<TransactionModel> transactions);
-    }
+    TransactionStatisticDto GetTransactionStatistic(List<TransactionTable> transactions);
 }

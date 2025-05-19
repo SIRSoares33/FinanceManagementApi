@@ -1,7 +1,8 @@
-using System.Security.Claims;
-using FinanceManagementApi.Models.Login;
-using FinanceManagementApi.Models.User;
+using AutoMapper;
+using Finance.Dtos;
+using FinanceManagementApi.Context.Tables;
 using FinanceManagementApi.Services.Auth;
+using FinanceManagementApi.Services.UserIdentity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,22 +10,22 @@ namespace FinanceManagementApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AuthController(IAuthService service) : ControllerBase
+    public class AuthController(IAuthService service, IMapper mapper) : ControllerBase
     {
         [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginModel model)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginDto model)
         {
-            var JwtToken = await service.LoginAsync(model);
+            var JwtToken = await service.LoginAsync(mapper.Map<UserTable>(model));
 
             return JwtToken is null ? Unauthorized("Usuário não encontrado.")
             : Ok(JwtToken);
         }
         [HttpPost("Register")]
-        public async Task<IActionResult> RegisterAsync([FromBody] UserModel model)
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto model)
         {
             try
             {
-                await service.RegisterAsync(model);
+                await service.RegisterAsync(mapper.Map<UserTable>(model));
                 return Created();
             }
             catch(Exception ex)
@@ -38,10 +39,9 @@ namespace FinanceManagementApi.Controllers
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
-                    throw new Exception("Não foi possível obter o id do usuário.");
+                var userId = UserIdentity.GetUserId(User);
                 
-                await service.DeleteAsync(int.Parse(userId));
+                await service.DeleteAsync(userId);
                 
                 return Ok();
             }
