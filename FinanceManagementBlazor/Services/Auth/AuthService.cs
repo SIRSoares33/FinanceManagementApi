@@ -1,6 +1,5 @@
 using Finance.Dtos;
 using FinanceManagementBlazor.Services.HttpRequests.Auth.Login;
-using FinanceManagementBlazor.Services.HttpRequests.Auth.Register;
 using FinanceManagementBlazor.Services.JwtParser;
 
 namespace FinanceManagementBlazor.Services.Auth.Login;

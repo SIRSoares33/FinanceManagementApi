@@ -6,8 +6,11 @@ namespace FinanceManagementBlazor.Services.HttpRequests.Auth.Login;
 
 public class LoginHttpService(IHttpService httpService, IAuthEndpoints endpoint) : ILoginHttpService
 {
+    #region HTTP
     private readonly HttpClient _http = httpService.GetHttpClient(false);
+    #endregion
 
+    #region Methods
     public async Task<string> LoginHttpRequest(LoginDto dto)
     {
         var response = await _http.PostAsJsonAsync(endpoint.Login, dto);
@@ -17,4 +20,5 @@ public class LoginHttpService(IHttpService httpService, IAuthEndpoints endpoint)
 
         return content; // This is the JWT token.
     }
+    #endregion
 }

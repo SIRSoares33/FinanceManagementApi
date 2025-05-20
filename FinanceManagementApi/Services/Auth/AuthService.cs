@@ -4,38 +4,37 @@ using FinanceManagementApi.Services.Auth;
 using FinanceManagementApi.Services.Token;
 using Microsoft.AspNetCore.Identity;
 
-namespace FinanceManagementApi.Services.Login
+namespace FinanceManagementApi.Services.Login;
+
+public class AuthService(IUserRepository repository, ITokenService tokenService, IPasswordHasher<UserTable> hasher)
+    : IAuthService
 {
-    public class AuthService(IUserRepository repository, ITokenService tokenService, IPasswordHasher<UserTable> hasher)
-        : IAuthService
+    public async Task<string?> LoginAsync(UserTable table)
     {
-        public async Task<string?> LoginAsync(UserTable model)
-        {
-            var user = await repository.GetUserByEmail(model.Email);
+        var user = await repository.GetUserByEmail(table.Email);
 
-            if (user is null)
-                return null;
+        if (user is null)
+            return null;
 
-            return hasher.VerifyHashedPassword(user, user.Password, model.Password) == PasswordVerificationResult.Success
-            ? tokenService.GenerateToken(user) : null;
-        }
+        return hasher.VerifyHashedPassword(user, user.Password, table.Password) == PasswordVerificationResult.Success
+        ? tokenService.GenerateToken(user) : null;
+    }
 
-        public async Task RegisterAsync(UserTable model)
-        {
-            if (await repository.VerifyEmailExistsInDb(model.Email))
-                throw new Exception("Email já existente.");
+    public async Task RegisterAsync(UserTable table)
+    {
+        if (await repository.VerifyEmailExistsInDb(table.Email))
+            throw new Exception("Email já existente.");
+    
+        table.Password = hasher.HashPassword(table, table.Password);
+
+        await repository.AddUserAsync(table);
+    }
+
+    public async Task DeleteAsync(int id) 
+    {
+        var userToDelete = await repository.GetUserById(id) 
+            ?? throw new Exception("Não foi possível localizar o usuário para exclusão.");
         
-            model.Password = hasher.HashPassword(model, model.Password);
-
-            await repository.AddUserAsync(model);
-        }
-
-        public async Task DeleteAsync(int id) 
-        {
-            var userToDelete = await repository.GetUserById(id) 
-                ?? throw new Exception("Não foi possível localizar o usuário para exclusão.");
-            
-            await repository.DeleteUserAsync(userToDelete);
-        }
+        await repository.DeleteUserAsync(userToDelete);
     }
 }

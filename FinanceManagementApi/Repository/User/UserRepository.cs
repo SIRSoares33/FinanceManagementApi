@@ -19,15 +19,9 @@ public class UserRepository(IContext context) : IUserRepository
         => context.Users.AnyAsync(x => x.Email == email);
     
     public async Task AddUserAsync(UserTable model)
-    {
-        await context.Users.AddAsync(model);
-        await context.Save();   
-    }       
+    { await context.Users.AddAsync(model); await context.Save(); }       
 
     public async Task DeleteUserAsync(UserTable userToDelete)
-    {
-        context.Users.Remove(userToDelete);
-        await context.Save();
-    }
+    { context.Users.Remove(userToDelete); await context.Save(); }
     #endregion
 }
