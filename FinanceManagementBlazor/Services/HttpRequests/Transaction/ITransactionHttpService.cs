@@ -1,6 +1,6 @@
 ﻿using Finance.Dtos;
 
-using FinanceManagementBlazor.Services.HttpRequests.Transaction;
+namespace FinanceManagementBlazor.Services.HttpRequests.Transaction;
 
 /// <summary>
 /// Define os serviços HTTP relacionados a transações financeiras.
@@ -13,7 +13,7 @@ public interface ITransactionHttpService
     /// </summary>
     /// <param name="id">Identificador utilizado para buscar as estatísticas.</param>
     /// <returns>Um objeto <see cref="TransactionStatisticDto"/> contendo entrada, despesa e saldo.</returns>
-    Task<TransactionStatisticDto> GetStatisticAsync(int id);
+    Task<TransactionStatisticDto> GetStatisticAsync(int? id);
 
     /// <summary>
     /// Obtém a lista de transações de uma filial específica.

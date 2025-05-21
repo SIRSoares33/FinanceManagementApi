@@ -1,8 +1,5 @@
-using AutoMapper;
 using Finance.Dtos;
-using FinanceManagementApi.Context.Tables;
 using FinanceManagementApi.Services.Auth;
-using FinanceManagementApi.Services.UserIdentity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +7,12 @@ namespace FinanceManagementApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AuthController(IAuthService service, IMapper mapper) : ControllerBase
+public class AuthController(IAuthService service) : ControllerBase
 {
     [HttpPost("Login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginDto dto)
     {
-        var JwtToken = await service.LoginAsync(mapper.Map<UserTable>(dto));
+        var JwtToken = await service.LoginAsync(dto);
 
         return JwtToken is null ? Unauthorized("Usuário não encontrado.")
         : Ok(JwtToken);
@@ -25,7 +22,7 @@ public class AuthController(IAuthService service, IMapper mapper) : ControllerBa
     {
         try
         {
-            await service.RegisterAsync(mapper.Map<UserTable>(dto));
+            await service.RegisterAsync(dto);
             return Created();
         }
         catch(Exception ex)
@@ -39,10 +36,7 @@ public class AuthController(IAuthService service, IMapper mapper) : ControllerBa
     {
         try
         {
-            var userId = UserIdentity.GetUserId(User);
-            
-            await service.DeleteAsync(userId);
-            
+            await service.DeleteAsync(User);
             return Ok();
         }
         catch(Exception ex)

@@ -1,40 +1,38 @@
+using System.Security.Claims;
+using AutoMapper;
+using Finance.Dtos;
 using FinanceManagementApi.Context.Tables;
-using FinanceManagementApi.Repository.User;
-using FinanceManagementApi.Services.Auth;
+using FinanceManagementApi.Repository;
 using FinanceManagementApi.Services.Token;
 using Microsoft.AspNetCore.Identity;
 
-namespace FinanceManagementApi.Services.Login;
+namespace FinanceManagementApi.Services.Auth;
 
-public class AuthService(IUserRepository repository, ITokenService tokenService, IPasswordHasher<UserTable> hasher)
+public class AuthService(IRepository repository, ITokenService tokenService, IPasswordHasher<UserTable> hasher, IMapper mapper)
     : IAuthService
 {
-    public async Task<string?> LoginAsync(UserTable table)
+    public async Task<string?> LoginAsync(LoginDto dto)
     {
-        var user = await repository.GetUserByEmail(table.Email);
+        try
+        {
+            var user = await repository.GetByAsync<UserTable>(u => u.Email == dto.Email);
 
-        if (user is null)
-            return null;
-
-        return hasher.VerifyHashedPassword(user, user.Password, table.Password) == PasswordVerificationResult.Success
-        ? tokenService.GenerateToken(user) : null;
+            return hasher.VerifyHashedPassword(user, user.Password, dto.Password) == PasswordVerificationResult.Success
+            ? tokenService.GenerateToken(user) : null;
+        }
+        catch (KeyNotFoundException) { return null; }
     }
 
-    public async Task RegisterAsync(UserTable table)
+    public async Task RegisterAsync(RegisterDto dto)
     {
-        if (await repository.VerifyEmailExistsInDb(table.Email))
+        if (await repository.ExistsAsync<UserTable>(x => x.Email == dto.Email))
             throw new Exception("Email já existente.");
     
-        table.Password = hasher.HashPassword(table, table.Password);
+        dto.Password = hasher.HashPassword(new(), dto.Password);
 
-        await repository.AddUserAsync(table);
+        await repository.CreateAsync(mapper.Map<UserTable>(dto));
     }
 
-    public async Task DeleteAsync(int id) 
-    {
-        var userToDelete = await repository.GetUserById(id) 
-            ?? throw new Exception("Não foi possível localizar o usuário para exclusão.");
-        
-        await repository.DeleteUserAsync(userToDelete);
-    }
+    public async Task DeleteAsync(ClaimsPrincipal user) 
+        => await repository.DeleteAsync<UserTable>(UserIdentity.UserIdentity.GetUserId(user));
 }

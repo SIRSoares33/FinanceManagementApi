@@ -1,8 +1,5 @@
-using AutoMapper;
 using Finance.Dtos;
-using FinanceManagementApi.Context.Tables;
-using FinanceManagementApi.Repository.Branch;
-using FinanceManagementApi.Services.UserIdentity;
+using FinanceManagementApi.Controllers.ControllerServices.Branch;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,16 +8,14 @@ namespace FinanceManagementApi.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class BranchController(IBranchRepository repository, IMapper mapper) : ControllerBase
+public class BranchController(IBranchService service) : ControllerBase
 {
     [HttpGet("GetAllBranchs")]
     public async Task<IActionResult> GetAllBranchsByUserId()
     {
         try
-        {                
-            var branchs = await repository.GetAllBranchsByUserIdAsync(UserIdentity.GetUserId(User));
-            
-            return Ok(mapper.Map<List<BranchDto>>(branchs));
+        {
+            return Ok(await service.GetAllBranchsByUserIdAsync(User));
         }
         catch (Exception ex)
         {
@@ -28,39 +23,22 @@ public class BranchController(IBranchRepository repository, IMapper mapper) : Co
         }
     }
     [HttpPost("CreateBranch")]
-    public async Task<IActionResult> CreateBranch([FromBody] BranchDto model)
+    public async Task<IActionResult> CreateBranch([FromBody] BranchDto dto)
     {
-        model.UserId = UserIdentity.GetUserId(User);
-        
-        await repository.CreateBranchAsync(mapper.Map<BranchTable>(model));
+        await service.CreateBranchAsync(dto, User);
         return Created();
-    }
-    [HttpPut("UpdateBranch/{branchId}")]
-    public async Task<IActionResult> UpdateBranch(int branchId, [FromBody] BranchDto model)
-    {
-        try
-        {
-            model.UserId = UserIdentity.GetUserId(User);
-
-            await repository.UpdateBranchAsync(branchId, mapper.Map<BranchTable>(model));
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
     }
     [HttpDelete("DeleteBranch/{branchId}")]
     public async Task<IActionResult> DeleteBranch(int branchId)
     {
         try
         {
-            await repository.DeleteBranchAsync(branchId);
+            await service.DeleteBranchAsync(branchId);
             return Ok();
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException)
         {
-            return BadRequest(ex.Message);
+            return BadRequest("Id da branch não encontrado.");
         }
     }
 }

@@ -13,9 +13,11 @@ public class TransactionHttpService(IHttpService httpService, ITransactionEndpoi
     #endregion
 
     #region Methods
-    public async Task<TransactionStatisticDto> GetStatisticAsync(int id)
+    public async Task<TransactionStatisticDto> GetStatisticAsync(int? id)
     {
-        var respose = await _http.GetAsync(endpoint.GetStatistic + id.ToString());
+        var thisEndpoint = id is null ? endpoint.GetAllStatistic : endpoint.GetBranchStatistic + id;    
+
+        var respose = await _http.GetAsync(thisEndpoint);
         var content = await respose.Content.ReadAsStringAsync();
 
         if (respose.IsSuccessStatusCode is false) throw new Exception(content);
@@ -26,7 +28,7 @@ public class TransactionHttpService(IHttpService httpService, ITransactionEndpoi
 
     public async Task<List<TransactionDto>> GetTransactionsAsync(int branchId)
     {
-        var response = await _http.GetAsync(endpoint.GetAll + branchId.ToString());
+        var response = await _http.GetAsync(endpoint.GetAll + branchId);
         var content  = await response.Content.ReadAsStringAsync();
 
         if (response.IsSuccessStatusCode is false) throw new Exception(content);

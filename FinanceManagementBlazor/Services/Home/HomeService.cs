@@ -13,7 +13,7 @@ public class HomeService(IBranchHttpService branchHttp, IUserLoggedStorage userS
         { 
             UserName  = (await userStorage.GetItemAsync())?.Name ?? throw new Exception("Não foi possível pegar o userName"), 
             Branchs   = await branchHttp.GetAllBranchsAsync(),
-            Statistic = await transactionHttpService.GetStatisticAsync(0)
+            Statistic = await transactionHttpService.GetStatisticAsync(null) 
         };
 
     public async Task DeleteBranchAsync(string branchId)
