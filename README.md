@@ -1,104 +1,82 @@
-# 💸 Finance Management API
+# 💰 Projeto de Gestão Financeira
 
-Uma API RESTful feita em ASP.NET Core para gerenciar finanças pessoais e organizacionais. Cada usuário pode criar diferentes *branches* (como "Casa", "Trabalho", "Investimentos"), que servem como agrupadores de receitas, despesas e outros dados financeiros.
+Sistema de **gestão financeira pessoal** desenvolvido com **Blazor WebAssembly** no frontend e **ASP.NET Core Web API** no backend. O sistema permite o controle de **transações financeiras**, organização por **categorias** e **branches** (subcontas ou carteiras).
 
----
+## 📌 Funcionalidades
 
-## 📚 Tecnologias
+- ✅ Cadastro e autenticação de usuários 
+- 💳 Registro de **transações** (entradas e saídas)
+- 🌿 Suporte a múltiplas **branches** (ex: Carteira, Conta Corrente, Poupança)
+- 🔄 Integração total entre o frontend (Blazor) e backend (API REST)
 
-- .NET 9
-- ASP.NET Core Web API
+## 🛠️ Tecnologias Utilizadas
+
+### Backend (API)
+
+- ASP.NET Core
 - Entity Framework Core
+- AutoMapper
 - SQLite
-- Swagger / OpenAPI
-- JWT Authentication
-- **Blazor WebAssembly (em desenvolvimento)** 🔥
 
----
+### Frontend (Blazor WebAssembly)
 
-## 📁 Funcionalidade Principal: Branch
+- Blazor WASM
+- Bootstrap
+- HttpClient para consumo da API
+- LocalStorage (para token JWT)
 
-Uma **Branch** representa uma área ou contexto financeiro. É vinculada a um usuário e pode ser usada para organizar transações, metas e relatórios.
+## 🚀 Como Rodar o Projeto
 
----
+### Pré-requisitos
 
-## 🔐 Autenticação e autorização
+- [.NET 8 SDK](https://dotnet.microsoft.com/)
+- Visual Studio ou VS Code
+- (Opcional) SQLite
 
-- JWT Bearer Authentication
-- Endpoints protegidos com `[Authorize]`
+### Passo a passo
 
----
+1. Clone o repositório:
+    
+    ```
+    git clone https://github.com/seu-usuario/FinanceManagementApi.git
+    ```
+    
+2. Execute as migrações do banco de dados:
+    
+    ```
+    cd FinanceManagementApi
+    dotnet ef database update
+    ```
+    
+3. Inicie a API:
+    
+    ```
+    dotnet run
+    ```
+    
+4. Execute o projeto Blazor:
+    
+    ```
+    cd ../FinanceManagementBlazor
+    dotnet run
+    ```
+    
+5. Acesse no navegador:
+    
+    ```
+    https://localhost:5001 (Exemplo de rota do wasm)
+    ```
+    
+## 📦 Futuras Implementações
 
-## 👤 Endpoints de usuário
+- 📱 Versão mobile com .NET MAUI
+- 📈 Gráficos de desempenho financeiro
+- ☁️ Deploy na nuvem (Azure, Vercel, etc.)
 
-- Cadastro e login
-- Atualização de perfil
-- Autorização por token
+## 🤝 Contribuição
 
----
-
-## 💰 Funcionalidades financeiras
-
-- Criação e gerenciamento de **receitas e despesas**
-- Organização por **categorias** e **branches**
-- Lançamentos com validação de dados
-- Futuro suporte a metas financeiras e gráficos
-
----
-
-## 📊 Relatórios
-
-- Relatórios por branch
-- Visão mensal e anual
-- Gráficos no front-end (com Blazor)
-
----
-
-## 🖥️ Front-end com Blazor WebAssembly
-
-O front-end será implementado com **Blazor WebAssembly** (em andamento). Ele será responsável por:
-
-- Interface interativa com autenticação via JWT
-- Dashboard com relatórios e gráficos
-- Formulários para transações, filtros por data/categoria/branch
-- Consumo direto da API com `HttpClient`
-
----
-
-## 🧭 Como executar localmente
-
-Clone o repositório:
-
-```
-git clone https://github.com/seu-usuario/FinanceManagementApi.git
-cd FinanceManagementApi
-```
-Restaure os pacotes:
-```
-dotnet restore
-```
-Aplique as migrations (opcional, caso o banco esteja vazio):
-```
-dotnet ef database update
-```
-Execute a API:
-```
-dotnet run
-```
-Acesse a documentação Swagger:
-```
-https://localhost:{porta}/swagger
-```
-O Executando o Blazor:
-```
-cd ..
-cd FinanceManagementBlazor
-dotnet run
-```
+Sinta-se à vontade para contribuir! Fork o projeto, crie uma branch e envie um Pull Request.
 
 ## 📄 Licença
-Distribuído sob a licença MIT. Veja o arquivo LICENSE para mais informações.
 
-## 🤝 Contribuindo
-Pull requests são bem-vindos!
-Para grandes mudanças, por favor, abra uma issue primeiro para discutirmos o que você gostaria de alterar.
+Este projeto está licenciado sob a MIT License.
