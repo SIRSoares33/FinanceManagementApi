@@ -10,7 +10,11 @@ public class BranchService(ITransactionHttpService transactionHttp, IBranchStora
     {
         var branch = await branchStorage.GetItemAsync() ?? throw new Exception("Branch não econtrada.");
 
-        return new() { Branch = branch, Transactions= await transactionHttp.GetTransactionsAsync(branch.Id), Statistic = await transactionHttp.GetStatisticAsync(branch.Id) };
+        return new() 
+        { 
+            Branch       = branch, 
+            Transactions = await transactionHttp.GetTransactionsAsync(branch.Id), 
+            Statistic    = await transactionHttp.GetStatisticAsync(branch.Id) };
     }
     public async Task SaveTransactionAsync(TransactionDto model)
     {

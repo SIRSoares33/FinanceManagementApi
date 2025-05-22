@@ -52,12 +52,13 @@ public class TransactionService(IRepository repository, IMapper mapper) : ITrans
         if (!await repository.ExistsAsync<BranchTable>(x => x.Id == branchId))
             throw new Exception("Branch não existe.");
 
-        var transactions = await repository.GetCollectionFromEntityAsync<BranchTable, TransactionTable>(
+        var branchTransactions = await repository.GetCollectionFromEntityAsync<BranchTable, TransactionTable>
+        (
             branchId,
             x => x.Transactions
         );
 
-        return mapper.Map<List<TransactionDto>>(transactions);
+        return mapper.Map<List<TransactionDto>>(branchTransactions);
     }
 
     public async Task DeleteTransaction(int id)

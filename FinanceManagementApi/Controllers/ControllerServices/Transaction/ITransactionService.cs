@@ -30,6 +30,12 @@ public interface ITransactionService
     /// <returns>Lista de transa��es correspondentes.</returns>
     /// <exception cref="Exception">Lan�ada se a filial informada n�o existir.</exception>
     Task<List<TransactionDto>> GetAllBranchTransactionsAsync(int branchId);
+     /// <summary>
+    /// Obt�m todas as transa��es ou somente as de um usuário.
+    /// </summary>
+    /// <param name="branchId">Identificador da filial (opcional).</param>
+    /// <returns>Lista de transa��es correspondentes.</returns>
+    /// <exception cref="Exception">Lan�ada se a filial informada n�o existir.</exception>
     Task<List<TransactionDto>> GetAllUserTransactionsAsync(ClaimsPrincipal user);
     /// <summary>
     /// Exclui uma transa��o com base em seu identificador.
