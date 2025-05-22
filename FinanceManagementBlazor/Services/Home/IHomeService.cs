@@ -1,4 +1,4 @@
-﻿using FinanceManagementBlazor.Entities;
+﻿using Finance.Dtos;
 
 using FinanceManagementBlazor.Services.Home;
 
@@ -24,11 +24,11 @@ public interface IHomeService
     /// Salva as informações de uma filial.
     /// </summary>
     /// <param name="branchInfo">Objeto contendo os dados da filial.</param>
-    Task SaveBranchAsync(BranchModel branchInfo);
+    Task SaveBranchAsync(BranchDto branchInfo);
 
     /// <summary>
     /// Armazena informações de uma filial localmente (ex: no storage do navegador).
     /// </summary>
     /// <param name="branch">Objeto contendo os dados da filial.</param>
-    Task SetBranchStorageAsync(BranchModel branch);
+    Task SetBranchStorageAsync(BranchDto branch);
 }

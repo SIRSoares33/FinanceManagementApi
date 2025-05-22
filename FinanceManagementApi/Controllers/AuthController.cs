@@ -1,54 +1,47 @@
-using System.Security.Claims;
-using FinanceManagementApi.Models.Login;
-using FinanceManagementApi.Models.User;
+using Finance.Dtos;
 using FinanceManagementApi.Services.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FinanceManagementApi.Controllers
-{
-    [ApiController]
-    [Route("[controller]")]
-    public class AuthController(IAuthService service) : ControllerBase
-    {
-        [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginModel model)
-        {
-            var JwtToken = await service.LoginAsync(model);
+namespace FinanceManagementApi.Controllers;
 
-            return JwtToken is null ? Unauthorized("Usuário não encontrado.")
-            : Ok(JwtToken);
-        }
-        [HttpPost("Register")]
-        public async Task<IActionResult> RegisterAsync([FromBody] UserModel model)
+[ApiController]
+[Route("[controller]")]
+public class AuthController(IAuthService service) : ControllerBase
+{
+    [HttpPost("Login")]
+    public async Task<IActionResult> LoginAsync([FromBody] LoginDto dto)
+    {
+        var JwtToken = await service.LoginAsync(dto);
+
+        return JwtToken is null ? Unauthorized("Usuário não encontrado.")
+        : Ok(JwtToken);
+    }
+    [HttpPost("Register")]
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto dto)
+    {
+        try
         {
-            try
-            {
-                await service.RegisterAsync(model);
-                return Created();
-            }
-            catch(Exception ex)
-            {
-                return UnprocessableEntity(ex.Message);
-            }
+            await service.RegisterAsync(dto);
+            return Created();
         }
-        [HttpDelete("Delete")]
-        [Authorize]
-        public async Task<IActionResult> DeleteAsync()
+        catch(Exception ex)
         {
-            try
-            {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
-                    throw new Exception("Não foi possível obter o id do usuário.");
-                
-                await service.DeleteAsync(int.Parse(userId));
-                
-                return Ok();
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return UnprocessableEntity(ex.Message);
+        }
+    }
+    [HttpDelete("Delete")]
+    [Authorize]
+    public async Task<IActionResult> DeleteAsync()
+    {
+        try
+        {
+            await service.DeleteAsync(User);
+            return Ok();
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 }

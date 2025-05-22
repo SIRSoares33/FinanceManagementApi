@@ -1,95 +1,70 @@
-using FinanceManagementApi.Models.Transaction;
-using FinanceManagementApi.Repository.Transaction;
-using FinanceManagementApi.Services.Transaction;
+using Finance.Dtos;
+using FinanceManagementApi.Controllers.ControllerServices.Transaction;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FinanceManagementApi.Controllers
+namespace FinanceManagementApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+[Authorize]
+public class TransactionController(ITransactionService service) : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    [Authorize]
-    public class TransactionController(ITransactionRepository repository, IBranchExists branchExists, ITransactionService service) : ControllerBase
+    [HttpPost("AddTransaction")]
+    public async Task<IActionResult> AddTransaction([FromBody] TransactionDto dto)
     {
-        [HttpPost("AddTransaction")]
-        public async Task<IActionResult> AddTransaction([FromBody] TransactionModel transactionModel)
+        try
         {
-            try
-            {
-                await branchExists.BranchExistsAsync(transactionModel.BranchId);
-
-                await repository.AddTransactionAsync(transactionModel);
-                return Created();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await service.CreateTransactionAsync(dto);
+            return Created();
         }
-        [HttpPut("UpdateTransaction/{transactionId}")]
-        public async Task<IActionResult> UpdateTransaction(int transactionId, [FromBody] TransactionModel transactionModel)
+        catch (Exception ex)
         {
-            try
-            {
-                await branchExists.BranchExistsAsync(transactionModel.BranchId);
-
-                await repository.UpdateTransactionAsync(transactionId, transactionModel);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest(ex.Message);
         }
-        [HttpDelete("DeleteTransaction/{transactionId}")]
-        public async Task<IActionResult> DeleteTransaction(int transactionId)
+    }
+    
+    [HttpDelete("DeleteTransaction/{transactionId}")]
+    public async Task<IActionResult> DeleteTransaction(int transactionId)
+    {
+        try
         {
-            try
-            {
-                await repository.DeleteTransactionAsync(transactionId);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await service.DeleteTransaction(transactionId);
+            return Ok();
         }
-        [HttpGet("GetAllTransactions/{branchId}")]
-        public async Task<IActionResult> GetAllTransactions(int branchId)
+        catch (KeyNotFoundException)
         {
-            try
-            {
-                await branchExists.BranchExistsAsync(branchId);
-                
-                return Ok((await repository.GetAllTransactionsAsync()).Where(x => x.BranchId == branchId));
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest("Transa��o n�o encontrada.");
         }
-        [HttpGet("GetStatistics/{branchId}")]
-        public async Task<IActionResult> GetStatisticsAsync(int branchId)
+    }
+    [HttpGet("GetAllBranchTransactions/{branchId}")]
+    public async Task<IActionResult> GetAllTransactions(int branchId)
+    {
+        try
+        {   
+            return Ok(await service.GetAllBranchTransactionsAsync(branchId));
+        }
+        catch(Exception ex)
         {
-            try
-            {
-                TransactionStatistic statistic;
-                
-                if (branchId is 0)
-                    statistic = service.GetTransactionStatistic(await repository.GetAllTransactionsAsync());
-                else
-                {
-                    await branchExists.BranchExistsAsync(branchId);
-
-                    statistic = service.GetTransactionStatistic((await repository.GetAllTransactionsAsync()).Where(x => x.BranchId == branchId).ToList());
-                }
-                
-                return Ok(statistic);
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest(ex.Message);
         }
+    }
+    [HttpGet("GetBranchStatistics/{branchId}")]
+    public async Task<IActionResult> GetStatisticsAsync(int branchId)
+    {
+        try
+        {
+            return Ok(service.GetTransactionStatistic(await service.GetAllBranchTransactionsAsync(branchId)));
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    [HttpGet("GetAllStatistics")]
+    public async Task<IActionResult> GetAllStatisticsAsync()
+    {
+        var transactions = await service.GetAllUserTransactionsAsync(User);
+        return Ok(service.GetTransactionStatistic(transactions));
     }
 }

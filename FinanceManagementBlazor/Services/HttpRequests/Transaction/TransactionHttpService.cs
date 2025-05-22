@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FinanceManagementBlazor.Entities;
+using Finance.Dtos;
 using FinanceManagementBlazor.Entities.Endpoints.Transaction;
 
 namespace FinanceManagementBlazor.Services.HttpRequests.Transaction;
@@ -13,28 +13,30 @@ public class TransactionHttpService(IHttpService httpService, ITransactionEndpoi
     #endregion
 
     #region Methods
-    public async Task<TransactionStatisticModel> GetStatisticAsync(int id)
+    public async Task<TransactionStatisticDto> GetStatisticAsync(int? id)
     {
-        var respose = await _http.GetAsync(endpoint.GetStatistic + id.ToString());
+        var thisEndpoint = id is null ? endpoint.GetAllStatistic : endpoint.GetBranchStatistic + id;    
+
+        var respose = await _http.GetAsync(thisEndpoint);
         var content = await respose.Content.ReadAsStringAsync();
 
         if (respose.IsSuccessStatusCode is false) throw new Exception(content);
 
-        return JsonSerializer.Deserialize<TransactionStatisticModel>(content)
+        return JsonSerializer.Deserialize<TransactionStatisticDto>(content)
             ?? throw new Exception("Erro ao desserializar json");
     }
 
-    public async Task<List<TransactionModel>> GetTransactionsAsync(int branchId)
+    public async Task<List<TransactionDto>> GetTransactionsAsync(int branchId)
     {
-        var response = await _http.GetAsync(endpoint.GetAll + branchId.ToString());
+        var response = await _http.GetAsync(endpoint.GetAll + branchId);
         var content  = await response.Content.ReadAsStringAsync();
 
         if (response.IsSuccessStatusCode is false) throw new Exception(content);
 
-        return JsonSerializer.Deserialize<List<TransactionModel>>(content) 
+        return JsonSerializer.Deserialize<List<TransactionDto>>(content) 
                 ?? throw new Exception("Fala ao deserializar json"); 
     }
-    public async Task AddTransactionAsync(TransactionModel model)
+    public async Task AddTransactionAsync(TransactionDto model)
     {
         var response = await _http.PostAsJsonAsync(endpoint.AddTransaction, model);
 

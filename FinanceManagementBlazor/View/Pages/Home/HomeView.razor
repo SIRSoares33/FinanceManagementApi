@@ -1,0 +1,44 @@
+@page "/Home"
+@layout FinanceManagementBlazor.View.Layout.NoMenuLayout
+
+@inject IHomeService service 
+@inject NavigationManager Navigate
+@inject AuthProvider authProvider
+
+@attribute [Authorize]
+
+<link rel="stylesheet" href="/css/home.css" />
+
+<BranchModalScreen Show="showModal" OnSave="async (BranchDto branchInfo) => await SaveBranchAsync(branchInfo)" />
+
+<div class="home-container">
+
+    <h1>Olá, @dependecies.UserName 👋</h1>
+
+    <DangerButton Text="Sair" OnClick="authProvider.UserLoggedOut" />
+
+    <div class="resumo">
+        <CardFinance Value=@dependecies.Statistic.Entry.ToString() Type="EFinanceCardType.Revenue" />
+        <CardFinance Value=@dependecies.Statistic.Expense.ToString() Type="EFinanceCardType.Expense" />
+        <CardFinance Value=@dependecies.Statistic.Balance.ToString() Type="EFinanceCardType.Balance" />
+    </div>
+
+    <h2 style="margin-top: 2rem;">Suas Branchs</h2> <AddButton OnClick="() => showModal=true" />
+
+    <Message context="@messageErro" caption="Erro" messageType="@EMessageType.Error" />
+
+    @if (dependecies.Branchs.Count == 0)
+    {
+        <h3>Você não possui branchs cadastradas</h3>
+    }
+    else
+    {
+        <div class="branchs-container">
+            @foreach (var branch in dependecies.Branchs)
+            {
+                <BranchCard BranchModel="branch" OnClick="async () => await GoToBranch(branch)" />
+                <DangerButton Text="Excluir" OnClick="async () => await DeleteBranchAsync(branch.Id)" />
+            }
+        </div>
+    }
+</div>

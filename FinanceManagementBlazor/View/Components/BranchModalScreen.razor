@@ -7,23 +7,22 @@
     <div class="modal-overlay">
         <div class="modal-box">
             <h4>Adicionar Campo</h4>
-            <Entry Label="Nome" Placeholder="Nome da branch" @bind-Value="@name" />
-            <Entry Label="Descrição" Placeholder="Descrição da Branch (Opcional)" @bind-Value="@description"/>
+            <Entry Label="Nome" Placeholder="Nome da branch" @bind-Value="@model.Name" />
+            <Entry Label="Descrição" Placeholder="Descrição da Branch (Opcional)" @bind-Value="@model.Description"/>
             <div class="modal-actions">
-                <button class="btn salvar" @onclick="() => OnSave.InvokeAsync( new(name, description) )">Salvar</button>
+                <button class="btn salvar" @onclick="() => OnSave.InvokeAsync( model )">Salvar</button>
                 <button class="btn cancelar" @onclick="() => { Show = false; } ">Cancelar</button>
             </div>
         </div>
     </div>
 }
 <style>
-   
+
 </style>
 
 @code {
-    private string name = string.Empty;
-    private string description = string.Empty;
+    private BranchDto model = new();
 
     [Parameter] public bool Show { get; set; }
-    [Parameter] public required EventCallback<BranchModel> OnSave { get; set; } 
+    [Parameter] public required EventCallback<BranchDto> OnSave { get; set; }
 }

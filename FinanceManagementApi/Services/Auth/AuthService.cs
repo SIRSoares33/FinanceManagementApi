@@ -1,42 +1,38 @@
-using FinanceManagementApi.Models.Login;
-using FinanceManagementApi.Models.User;
-using FinanceManagementApi.Repository.User;
-using FinanceManagementApi.Services.Auth;
+using System.Security.Claims;
+using AutoMapper;
+using Finance.Dtos;
+using FinanceManagementApi.Context.Tables;
+using FinanceManagementApi.Repository;
 using FinanceManagementApi.Services.Token;
 using Microsoft.AspNetCore.Identity;
 
-namespace FinanceManagementApi.Services.Login
+namespace FinanceManagementApi.Services.Auth;
+
+public class AuthService(IRepository repository, ITokenService tokenService, IPasswordHasher<UserTable> hasher, IMapper mapper)
+    : IAuthService
 {
-    public class AuthService(IUserRepository repository, ITokenService tokenService, IPasswordHasher<IUserEmailAndPassword> hasher)
-        : IAuthService
+    public async Task<string?> LoginAsync(LoginDto dto)
     {
-        public async Task<string?> LoginAsync(LoginModel model)
+        try
         {
-            var user = await repository.GetUserByEmail(model.Email);
+            var user = await repository.GetByAsync<UserTable>(u => u.Email == dto.Email);
 
-            if (user is null)
-                return null;
-
-            return hasher.VerifyHashedPassword(user, user.Password, model.Password) == PasswordVerificationResult.Success
+            return hasher.VerifyHashedPassword(user, user.Password, dto.Password) == PasswordVerificationResult.Success
             ? tokenService.GenerateToken(user) : null;
         }
-
-        public async Task RegisterAsync(UserModel model)
-        {
-            if (await repository.VerifyEmailExistsInDb(model.Email))
-                throw new Exception("Email já existente.");
-        
-            model.Password = hasher.HashPassword(model, model.Password);
-
-            await repository.AddUserAsync(model);
-        }
-
-        public async Task DeleteAsync(int id) 
-        {
-            var userToDelete = await repository.GetUserById(id) 
-                ?? throw new Exception("Não foi possível localizar o usuário para exclusão.");
-            
-            await repository.DeleteUserAsync(userToDelete);
-        }
+        catch (KeyNotFoundException) { return null; }
     }
+
+    public async Task RegisterAsync(RegisterDto dto)
+    {
+        if (await repository.ExistsAsync<UserTable>(x => x.Email == dto.Email))
+            throw new Exception("Email já existente.");
+    
+        dto.Password = hasher.HashPassword(new(), dto.Password);
+
+        await repository.CreateAsync(mapper.Map<UserTable>(dto));
+    }
+
+    public async Task DeleteAsync(ClaimsPrincipal user) 
+        => await repository.DeleteAsync<UserTable>(UserIdentity.UserIdentity.GetUserId(user));
 }
